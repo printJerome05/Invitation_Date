@@ -1,7 +1,21 @@
 /**
  * Aesthetic Romantic Date Invitation Experience
- * Procedural Web Audio, 3D Envelope Physics, Playful Dodge AI, Canvas Confetti & Date Planner
+ * Procedural Web Audio, Automated Calligraphic Typewriter, 3D Envelope Physics, 
+ * Playful Dodge AI, Canvas Rose Petals & High-Resolution Date Pass Download
  */
+
+// ==========================================================================
+// CONFIGURATION: RECIPIENT & PERSONALIZATION
+// Define the recipient name and custom text settings here
+// ==========================================================================
+const INVITATION_CONFIG = {
+  recipientName: "Mara Oruga",         // Primary recipient name
+  recipientDisplay: "Mara Oruga 💖",    // Aesthetic text typed onto envelope
+  petName: "Mara Oruga 💕",            // VIP Passenger name on ticket
+  salutation: "Mara Oruga",            // Personalized letter salutation
+  typingSpeedMs: 85,                   // Speed per character (ms)
+  typingStartDelayMs: 550              // Delay before typing begins (ms)
+};
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -131,6 +145,29 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.start(this.ctx.currentTime);
       osc.stop(this.ctx.currentTime + 0.06);
     }
+
+    playTypeTick() {
+      if (!this.enabled) return;
+      this.init();
+      if (!this.ctx) return;
+
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+
+      osc.type = 'sine';
+      const now = this.ctx.currentTime;
+      osc.frequency.setValueAtTime(1100 + Math.random() * 200, now);
+      osc.frequency.exponentialRampToValueAtTime(600, now + 0.03);
+
+      gain.gain.setValueAtTime(0.045, now);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+
+      osc.start(now);
+      osc.stop(now + 0.035);
+    }
   }
 
   const soundEngine = new RomanticAudio();
@@ -164,34 +201,37 @@ document.addEventListener('DOMContentLoaded', () => {
     height = canvas.height = window.innerHeight;
   });
 
-  // Floating Ambient Dust & Hearts
+  // Floating Romantic Petals & Gold Sparkles
   const particles = [];
-  const PARTICLE_COUNT = 38;
+  const PARTICLE_COUNT = 45;
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      size: Math.random() * 3 + 1,
-      speedY: Math.random() * 0.4 + 0.2,
-      speedX: (Math.random() - 0.5) * 0.3,
-      opacity: Math.random() * 0.5 + 0.2,
-      isHeart: Math.random() > 0.65,
-      hue: Math.random() > 0.5 ? 345 : 42 // Rosy or Gold
+      size: Math.random() * 5 + 3,
+      speedY: Math.random() * 0.5 + 0.25,
+      speedX: (Math.random() - 0.5) * 0.4,
+      rotation: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.02,
+      swayPhase: Math.random() * Math.PI * 2,
+      opacity: Math.random() * 0.45 + 0.25,
+      isPetal: Math.random() > 0.4,
+      colorHue: Math.random() > 0.3 ? 346 : 42 // Soft Rose or Golden Starlight
     });
   }
 
-  // Celebration Fireworks / Confetti Array
+  // Celebration Confetti Array
   const confettiPieces = [];
 
-  function spawnConfetti(count = 120) {
-    const colors = ['#ff3b6f', '#ffd166', '#ffffff', '#ff9ebb', '#a05195', '#f39c12'];
+  function spawnConfetti(count = 130) {
+    const colors = ['#e6396b', '#ff758f', '#ffd166', '#d4af37', '#ffffff', '#ff9ebb', '#f39c12'];
     for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
       const speed = Math.random() * 12 + 4;
       confettiPieces.push({
         x: width / 2,
-        y: height / 2 + 50,
+        y: height / 2 + 30,
         vx: Math.cos(angle) * speed,
         vy: Math.sin(angle) * speed - 6,
         size: Math.random() * 8 + 5,
@@ -200,9 +240,23 @@ document.addEventListener('DOMContentLoaded', () => {
         rotSpeed: (Math.random() - 0.5) * 12,
         gravity: 0.25,
         opacity: 1,
-        isHeart: Math.random() > 0.4
+        isHeart: Math.random() > 0.45
       });
     }
+  }
+
+  function drawRosePetal(c, x, y, size, rotation, opacity) {
+    c.save();
+    c.translate(x, y);
+    c.rotate(rotation);
+    c.beginPath();
+    c.moveTo(0, 0);
+    c.bezierCurveTo(-size, -size * 0.8, -size * 1.2, size * 0.8, 0, size * 1.5);
+    c.bezierCurveTo(size * 1.2, size * 0.8, size, -size * 0.8, 0, 0);
+    c.closePath();
+    c.fillStyle = `hsla(346, 75%, 72%, ${opacity})`;
+    c.fill();
+    c.restore();
   }
 
   function drawHeart(c, x, y, size, color, opacity = 1) {
@@ -226,23 +280,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!ctx) return;
     ctx.clearRect(0, 0, width, height);
 
-    // 1. Ambient Background Particles
+    // 1. Ambient Background Petals & Sparkles
     for (let p of particles) {
       p.y -= p.speedY;
-      p.x += Math.sin(p.y * 0.01) * 0.3 + p.speedX;
+      p.swayPhase += 0.015;
+      p.x += Math.sin(p.swayPhase) * 0.45 + p.speedX;
+      p.rotation += p.rotSpeed;
 
-      if (p.y < -20) {
-        p.y = height + 10;
+      if (p.y < -30) {
+        p.y = height + 20;
         p.x = Math.random() * width;
       }
 
-      if (p.isHeart) {
-        drawHeart(ctx, p.x, p.y, p.size * 3.5, `hsl(${p.hue}, 80%, 75%)`, p.opacity * 0.7);
+      if (p.isPetal) {
+        drawRosePetal(ctx, p.x, p.y, p.size, p.rotation, p.opacity);
       } else {
+        // Shimmering Golden Sparkle
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, ${p.opacity})`;
+        ctx.arc(p.x, p.y, p.size * 0.6, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(42, 85%, 60%, ${p.opacity * 0.85})`;
+        ctx.shadowColor = 'rgba(212, 175, 55, 0.4)';
+        ctx.shadowBlur = 6;
         ctx.fill();
+        ctx.restore();
       }
     }
 
@@ -278,7 +339,50 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAnimation();
 
   // ==========================================================================
-  // 3. ENVELOPE OPENING INTERACTION (STAGE 1 -> STAGE 2)
+  // 3. AESTHETIC AUTOMATED TYPEWRITER EFFECT (FOR RECIPIENT ON ENVELOPE)
+  // ==========================================================================
+  function initTypewriterEffect() {
+    const typedTarget = document.getElementById('typed-recipient-name');
+    const tapHint = document.getElementById('envelope-tap-hint');
+    const instructionText = document.getElementById('envelope-instruction-text');
+    const letterNameDisplay = document.getElementById('letter-recipient-name');
+    const ticketPassengerDisplay = document.getElementById('ticket-passenger-display');
+
+    // Pre-populate downstream name displays
+    if (letterNameDisplay) letterNameDisplay.textContent = INVITATION_CONFIG.recipientName;
+    if (ticketPassengerDisplay) ticketPassengerDisplay.textContent = INVITATION_CONFIG.petName;
+
+    if (!typedTarget) return;
+
+    const textToType = INVITATION_CONFIG.recipientDisplay;
+    let charIdx = 0;
+
+    // Begin typing after slight initial delay for dramatic effect
+    setTimeout(() => {
+      const typeTimer = setInterval(() => {
+        if (charIdx < textToType.length) {
+          typedTarget.textContent += textToType.charAt(charIdx);
+          charIdx++;
+          soundEngine.playTypeTick();
+        } else {
+          clearInterval(typeTimer);
+
+          // Update hint and instruction to make it extra personal
+          if (tapHint) {
+            tapHint.innerHTML = `Special delivery for <strong>${INVITATION_CONFIG.recipientName}</strong> ✨ Tap wax seal to open 💌`;
+          }
+          if (instructionText) {
+            instructionText.innerHTML = `A hand-delivered letter for <strong>${INVITATION_CONFIG.recipientName}</strong>`;
+          }
+        }
+      }, INVITATION_CONFIG.typingSpeedMs);
+    }, INVITATION_CONFIG.typingStartDelayMs);
+  }
+
+  initTypewriterEffect();
+
+  // ==========================================================================
+  // 4. ENVELOPE OPENING INTERACTION (STAGE 1 -> STAGE 2)
   // ==========================================================================
   const envelopeStage = document.getElementById('envelope-stage');
   const envelopeWrapper = document.getElementById('envelope-wrapper');
@@ -323,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 4. PLAYFUL "NO" BUTTON DODGE & DYNAMIC "YES" GROWTH
+  // 5. PLAYFUL "NO" BUTTON DODGE & DYNAMIC "YES" GROWTH
   // ==========================================================================
   const btnYes = document.getElementById('btn-yes');
   const btnNo = document.getElementById('btn-no');
@@ -335,14 +439,14 @@ document.addEventListener('DOMContentLoaded', () => {
   let yesScale = 1;
 
   const pleaPhrases = [
-    "Wait, think about it! 🥺",
+    `Wait ${INVITATION_CONFIG.recipientName}, think about it! 🥺`,
     "Are you really sure? 🙈",
     "Wrong button silly! 💕",
-    "I'll buy you all the snacks! 🍜",
+    "I'll buy you all the delicious food! 🍜",
     "Look how shiny the YES button is! ✨",
     "Pretty please with extra chicharon? 🥺",
     "Don't break my tiny heart! 💔",
-    "Give it a chance, it'll be amazing! 🌸",
+    "Give it a chance, it'll be magical! 🌸",
     "Resistance is futile, say yes! 🥰"
   ];
 
@@ -363,21 +467,18 @@ document.addEventListener('DOMContentLoaded', () => {
     dodgeCount++;
     soundEngine.playDodgeBoop();
 
-    // 1. Calculate random displacement within decision arena / card bounds
+    // Calculate displacement within arena bounds
     const arenaRect = decisionArena.getBoundingClientRect();
     const btnRect = btnNo.getBoundingClientRect();
 
-    // Bound offsets so it doesn't escape out of visible view
     const maxOffsetX = Math.min(140, arenaRect.width / 2 - btnRect.width / 2);
     const maxOffsetY = 45;
 
-    // Pick a new random non-zero coordinate
     const randomX = (Math.random() * 2 - 1) * maxOffsetX;
     const randomY = (Math.random() * 2 - 1) * maxOffsetY;
 
     btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
 
-    // 2. Cycle dynamic witty messages
     const textIdx = dodgeCount % noButtonTexts.length;
     btnNoText.textContent = noButtonTexts[textIdx];
 
@@ -387,22 +488,18 @@ document.addEventListener('DOMContentLoaded', () => {
       pleaMessage.style.opacity = '1';
     }
 
-    // 3. Make YES button bigger and more compelling
     yesScale += 0.08;
     btnYes.style.transform = `scale(${yesScale})`;
   }
 
   if (btnNo) {
-    // Desktop hover escape
     btnNo.addEventListener('mouseenter', dodgeNoButton);
-    // Mobile touch attempt escape
     btnNo.addEventListener('touchstart', dodgeNoButton, { passive: false });
-    // If clicked anyway (super fast tap), still dodge
     btnNo.addEventListener('click', dodgeNoButton);
   }
 
   // ==========================================================================
-  // 5. YES! CLICKED -> CELEBRATION & REVEAL DATE PLANNER
+  // 6. YES! CLICKED -> CELEBRATION & REVEAL DATE PLANNER
   // ==========================================================================
   const letterContent = document.getElementById('letter-content');
   const datePlanner = document.getElementById('date-planner');
@@ -411,11 +508,9 @@ document.addEventListener('DOMContentLoaded', () => {
     btnYes.addEventListener('click', () => {
       soundEngine.playCelebrationFanfare();
 
-      // Confetti burst!
       spawnConfetti(150);
       setTimeout(() => spawnConfetti(100), 500);
 
-      // Smoothly transition from Proposal Card to Date Customizer
       letterContent.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
       letterContent.style.opacity = '0';
       letterContent.style.transform = 'translateY(-15px)';
@@ -429,9 +524,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 6. DATE PLANNER CHOICES & ITINERARY
+  // 7. DATE PLANNER CHOICES & ITINERARY
   // ==========================================================================
-  // Vibe radio selection
   const vibeCards = document.querySelectorAll('.choice-card');
   let selectedVibe = "Special Batangas Lomi Date";
 
@@ -448,7 +542,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Schedule radio chips
   const chipPills = document.querySelectorAll('.chip-pill');
   let selectedSchedule = "This Friday Evening 🌙";
 
@@ -468,6 +561,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Lock In Date CTA & Generate Boarding Pass
   const btnLockDate = document.getElementById('btn-lock-date');
   const ticketResult = document.getElementById('ticket-result');
+  const ticketPassengerDisplay = document.getElementById('ticket-passenger-display');
   const ticketVibeDisplay = document.getElementById('ticket-vibe-display');
   const ticketTimeDisplay = document.getElementById('ticket-time-display');
   const ticketNoteDisplay = document.getElementById('ticket-note-display');
@@ -478,22 +572,20 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnLockDate) {
     btnLockDate.addEventListener('click', () => {
       soundEngine.playOpenChime();
-      spawnConfetti(80);
+      spawnConfetti(90);
 
       currentCustomNote = customNoteInput ? customNoteInput.value.trim() : "";
 
-      // Populate Ticket Displays
+      if (ticketPassengerDisplay) ticketPassengerDisplay.textContent = INVITATION_CONFIG.petName;
       if (ticketVibeDisplay) ticketVibeDisplay.textContent = selectedVibe;
       if (ticketTimeDisplay) ticketTimeDisplay.textContent = selectedSchedule;
       if (ticketNoteDisplay) {
         ticketNoteDisplay.textContent = currentCustomNote ? `"${currentCustomNote}"` : `"Extra cute smiles & good vibes"`;
       }
 
-      // Hide form fields & reveal ticket
       document.querySelector('.planner-form').style.display = 'none';
       ticketResult.classList.remove('hidden');
 
-      // Scroll ticket into view
       setTimeout(() => {
         ticketResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }, 200);
@@ -512,15 +604,229 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 7. SHARING & RSVP GENERATOR (WHATSAPP & CLIPBOARD)
+  // 8. LUXURY BOARDING PASS TICKET DOWNLOAD (HIGH-RESOLUTION CANVAS PNG)
+  // ==========================================================================
+  function downloadTicketImage() {
+    soundEngine.playCelebrationFanfare();
+    spawnConfetti(100);
+
+    const downloadText = document.getElementById('download-text');
+    if (downloadText) downloadText.textContent = "Creating Image...";
+
+    // Render at 2x Retina resolution for crisp typography and graphics
+    const dpr = 2;
+    const canvasWidth = 760;
+    const canvasHeight = 460;
+
+    const offCanvas = document.createElement('canvas');
+    offCanvas.width = canvasWidth * dpr;
+    offCanvas.height = canvasHeight * dpr;
+    const c = offCanvas.getContext('2d');
+    c.scale(dpr, dpr);
+
+    // Outer background fill
+    c.fillStyle = '#fff6f8';
+    c.fillRect(0, 0, canvasWidth, canvasHeight);
+
+    // 1. Ticket Base Card
+    const cardX = 24;
+    const cardY = 24;
+    const cardW = canvasWidth - 48;
+    const cardH = canvasHeight - 48;
+    const radius = 18;
+
+    c.save();
+    c.beginPath();
+    c.roundRect(cardX, cardY, cardW, cardH, radius);
+    c.fillStyle = '#ffffff';
+    c.fill();
+    c.lineWidth = 2;
+    c.strokeStyle = '#ebd3b0';
+    c.stroke();
+
+    // Inner gold luxury border
+    c.beginPath();
+    c.roundRect(cardX + 8, cardY + 8, cardW - 16, cardH - 16, radius - 6);
+    c.lineWidth = 1;
+    c.strokeStyle = 'rgba(200, 158, 82, 0.35)';
+    c.stroke();
+    c.restore();
+
+    // 2. Ticket Header
+    c.fillStyle = '#791530';
+    c.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
+    c.fillText('❦  OFFICIAL DATE PASS', cardX + 28, cardY + 44);
+
+    // Status Badge: CONFIRMED ✓
+    const badgeText = 'CONFIRMED ✓';
+    c.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
+    const badgeW = c.measureText(badgeText).width + 20;
+    const badgeX = cardX + cardW - badgeW - 28;
+    const badgeY = cardY + 28;
+    c.beginPath();
+    c.roundRect(badgeX, badgeY, badgeW, 24, 6);
+    c.fillStyle = '#e8f7ec';
+    c.fill();
+    c.strokeStyle = '#1b7a37';
+    c.lineWidth = 1;
+    c.stroke();
+    c.fillStyle = '#1b7a37';
+    c.fillText(badgeText, badgeX + 10, badgeY + 16);
+
+    // Header divider line
+    c.beginPath();
+    c.moveTo(cardX + 26, cardY + 64);
+    c.lineTo(cardX + cardW - 26, cardY + 64);
+    c.strokeStyle = '#ebd8bd';
+    c.lineWidth = 1.2;
+    c.stroke();
+
+    // 3. Ticket Main Content Grid
+    const col1X = cardX + 30;
+    const col2X = cardX + cardW / 2 + 10;
+
+    // Row 1: Passenger / VIP
+    c.fillStyle = '#8f7685';
+    c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+    c.fillText('PASSENGER / VIP', col1X, cardY + 92);
+    c.fillStyle = '#d93b68';
+    c.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
+    c.fillText(INVITATION_CONFIG.petName, col1X, cardY + 118);
+
+    // Row 1: Destination
+    c.fillStyle = '#8f7685';
+    c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+    c.fillText('DESTINATION', col2X, cardY + 92);
+    c.fillStyle = '#2b1129';
+    c.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
+    c.fillText('To My Heart & A Great Time', col2X, cardY + 118);
+
+    // Row 2: Planned Vibe
+    c.fillStyle = '#8f7685';
+    c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+    c.fillText('PLANNED VIBE', col1X, cardY + 155);
+    c.fillStyle = '#2b1129';
+    c.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+    c.fillText(selectedVibe, col1X, cardY + 180);
+
+    // Row 2: Schedule
+    c.fillStyle = '#8f7685';
+    c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+    c.fillText('SCHEDULE', col2X, cardY + 155);
+    c.fillStyle = '#2b1129';
+    c.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
+    c.fillText(selectedSchedule, col2X, cardY + 180);
+
+    // Row 3: Special Request
+    c.fillStyle = '#8f7685';
+    c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
+    c.fillText('SPECIAL REQUEST', col1X, cardY + 215);
+    c.fillStyle = '#553c52';
+    c.font = 'italic 500 15px "Plus Jakarta Sans", sans-serif';
+    const noteText = currentCustomNote ? `"${currentCustomNote}"` : `"Extra cute smiles & good vibes"`;
+    c.fillText(noteText, col1X, cardY + 238);
+
+    // 4. Perforation Line with Side Notches
+    const perfY = cardY + 270;
+
+    // Left notch cutout
+    c.beginPath();
+    c.arc(cardX, perfY, 13, -Math.PI / 2, Math.PI / 2, false);
+    c.fillStyle = '#fff6f8';
+    c.fill();
+    c.strokeStyle = '#ebd3b0';
+    c.lineWidth = 2;
+    c.stroke();
+
+    // Right notch cutout
+    c.beginPath();
+    c.arc(cardX + cardW, perfY, 13, Math.PI / 2, -Math.PI / 2, false);
+    c.fillStyle = '#fff6f8';
+    c.fill();
+    c.strokeStyle = '#ebd3b0';
+    c.lineWidth = 2;
+    c.stroke();
+
+    // Dashed perforation line
+    c.beginPath();
+    c.setLineDash([8, 6]);
+    c.moveTo(cardX + 22, perfY);
+    c.lineTo(cardX + cardW - 22, perfY);
+    c.strokeStyle = '#dac2a1';
+    c.lineWidth = 1.8;
+    c.stroke();
+    c.setLineDash([]); // Reset dash
+
+    // 5. Footer: Barcode & Approved Stamp
+    const barX = cardX + 30;
+    const barY = perfY + 26;
+    const barWidths = [3, 1, 4, 2, 1, 3, 2, 5, 2, 1, 3, 4, 1, 2, 3, 1, 5, 2, 2, 4, 1, 3, 2, 4, 2, 1, 3, 2, 4, 1, 2, 4];
+    let curX = barX;
+    c.fillStyle = '#1d0d1e';
+    for (let i = 0; i < barWidths.length; i++) {
+      const w = barWidths[i] * 2.1;
+      if (i % 2 === 0) {
+        c.fillRect(curX, barY, w, 36);
+      }
+      curX += w + 2.4;
+    }
+
+    c.fillStyle = '#7d6b79';
+    c.font = '10px monospace';
+    c.fillText('DATE-NO-REFUNDS-FOREVER-💖', barX, barY + 52);
+
+    // Official Approved Stamp (tilted)
+    c.save();
+    c.translate(cardX + cardW - 135, barY + 25);
+    c.rotate((-8 * Math.PI) / 180);
+    c.beginPath();
+    c.roundRect(-80, -22, 160, 44, 6);
+    c.strokeStyle = '#a61f3d';
+    c.lineWidth = 2.5;
+    c.stroke();
+    c.fillStyle = '#a61f3d';
+    c.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+    c.textAlign = 'center';
+    c.fillText('APPROVED WITH LOVE', 0, 5);
+    c.restore();
+
+    // 6. Download as PNG
+    try {
+      const imageURL = offCanvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `Date-Ticket-${INVITATION_CONFIG.recipientName.replace(/\s+/g, '-')}.png`;
+      link.href = imageURL;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      if (downloadText) downloadText.textContent = "✓ Downloaded!";
+    } catch (err) {
+      console.error("Ticket download error:", err);
+      if (downloadText) downloadText.textContent = "Download Ticket 🎟️";
+    }
+
+    setTimeout(() => {
+      if (downloadText) downloadText.textContent = "Download Ticket 🎟️";
+    }, 3500);
+  }
+
+  const btnDownloadTicket = document.getElementById('btn-download-ticket');
+  if (btnDownloadTicket) {
+    btnDownloadTicket.addEventListener('click', downloadTicketImage);
+  }
+
+  // ==========================================================================
+  // 9. SHARING & RSVP GENERATOR (WHATSAPP & CLIPBOARD)
   // ==========================================================================
   function generateRSVPMessage() {
-    let msg = `💖 Official Date Confirmation! 💖\n\n`;
+    let msg = `💖 Official Date Confirmation for ${INVITATION_CONFIG.recipientName}! 💖\n\n`;
     msg += `I said YES! Here is our date plan:\n`;
-    msg += `✨ Vibe: ${selectedVibe}\n`;
+    msg += `✨ VIP Passenger: ${INVITATION_CONFIG.petName}\n`;
+    msg += `🍜 Planned Vibe: ${selectedVibe}\n`;
     msg += `🗓️ Schedule: ${selectedSchedule}\n`;
     if (currentCustomNote) {
-      msg += `💭 Special Request: ${currentCustomNote}\n`;
+      msg += `💭 Special Request: "${currentCustomNote}"\n`;
     }
     msg += `\nI can't wait! See you on our date! 🥰✨`;
     return msg;
@@ -551,7 +857,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(message);
         } else {
-          // Fallback textarea
           const ta = document.createElement('textarea');
           ta.value = message;
           document.body.appendChild(ta);

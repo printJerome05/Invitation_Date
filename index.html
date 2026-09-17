@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>A Special Invitation for You ✨</title>
   
-  <!-- Google Fonts: Cormorant Garamond for romantic elegance & Plus Jakarta Sans for UI -->
+  <!-- Google Fonts: Cormorant Garamond, Great Vibes & Alex Brush for romantic calligraphy, Plus Jakarta Sans for UI -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="style.css">
 </head>
@@ -31,7 +31,7 @@
     <div class="envelope-stage" id="envelope-stage">
       <div class="envelope-instruction">
         <span class="sparkle-left">✦</span>
-        <span>A hand-delivered letter just for you</span>
+        <span id="envelope-instruction-text">A hand-delivered letter just for you</span>
         <span class="sparkle-right">✦</span>
       </div>
 
@@ -69,6 +69,17 @@
             </div>
           </div>
 
+          <!-- Aesthetic Hand-Addressed Mail Card -->
+          <div class="envelope-addressee" id="envelope-addressee">
+            <div class="addressee-tag">Special Air Mail ❦</div>
+            <div class="addressee-name-row">
+              <span class="addressee-to">To:</span>
+              <span class="addressee-name" id="typed-recipient-name"></span>
+              <span class="typing-cursor" id="typing-cursor">|</span>
+            </div>
+            <div class="addressee-sub">Delivered with all my heart 🌸</div>
+          </div>
+
           <!-- Wax Seal Button -->
           <button class="wax-seal" id="wax-seal" aria-label="Break seal and open letter">
             <div class="seal-inner">
@@ -79,7 +90,7 @@
           </button>
         </div>
 
-        <p class="tap-hint">Tap the wax seal to open <span>✨</span></p>
+        <p class="tap-hint" id="envelope-tap-hint">Tap the wax seal to open <span>✨</span></p>
       </div>
     </div>
 
@@ -95,7 +106,7 @@
         <!-- Envelope Header Note -->
         <div class="letter-header">
           <span class="date-badge">Personal & Confidential</span>
-          <h1 class="letter-title">Dearest Someone Special,</h1>
+          <h1 class="letter-title">Dearest <span id="letter-recipient-name" class="recipient-name-highlight">Mara Oruga</span>,</h1>
           <div class="gold-divider"><span>❦</span></div>
         </div>
 
@@ -245,7 +256,7 @@
                   <div class="ticket-row">
                     <div class="ticket-col">
                       <span class="ticket-lbl">PASSENGER / VIP</span>
-                      <span class="ticket-val highlight">My Favorite Person 💕</span>
+                      <span class="ticket-val highlight" id="ticket-passenger-display">Mara Oruga 💕</span>
                     </div>
                     <div class="ticket-col">
                       <span class="ticket-lbl">DESTINATION</span>
@@ -289,8 +300,12 @@
               </div>
             </div>
 
-            <!-- RSVP Sharing Buttons -->
+            <!-- RSVP Sharing & Download Buttons -->
             <div class="rsvp-button-group">
+              <button id="btn-download-ticket" class="btn-action download" aria-label="Download Official Date Pass">
+                <span id="download-icon">📥</span>
+                <span id="download-text">Download Ticket 🎟️</span>
+              </button>
               <button id="btn-share-whatsapp" class="btn-action whatsapp">
                 <span>💬 Send via WhatsApp</span>
               </button>

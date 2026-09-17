@@ -5,36 +5,37 @@
 
 /* Design Tokens & Theme Variables */
 :root {
-  --bg-deep: #0e0814;
-  --bg-glow-1: #220e26;
-  --bg-glow-2: #381427;
+  --bg-canvas: #fff6f8;
+  --bg-canvas-glow: #ffeef3;
+  --bg-ivory: #fffdf9;
   
-  --parchment-bg: #fcf9f2;
-  --parchment-border: #e8ded0;
+  --parchment-bg: #ffffff;
+  --parchment-border: #f0e1d5;
   --parchment-gold: #c89e52;
-  --parchment-gold-light: #f5e4bd;
-  --parchment-shadow: rgba(18, 5, 23, 0.45);
+  --parchment-gold-light: #f7e6c4;
+  --parchment-shadow: rgba(160, 45, 75, 0.15);
   
-  --text-main: #2b172d;
-  --text-muted: #6e5870;
-  --text-light: #fbebf0;
+  --text-main: #2d1424;
+  --text-muted: #78586f;
+  --text-light: #2d1424;
   
-  --rose-primary: #e6396b;
-  --rose-hover: #c42453;
-  --rose-soft: #ffe4ec;
-  --rose-glow: rgba(230, 57, 107, 0.4);
+  --rose-primary: #d93b68;
+  --rose-hover: #b8244e;
+  --rose-soft: #ffeaf0;
+  --rose-glow: rgba(217, 59, 104, 0.28);
   
-  --envelope-outer: #371424;
-  --envelope-inner: #240c17;
-  --envelope-flap: #43192c;
-  --wax-red: #8f1325;
-  --wax-gold: #ffd27d;
+  --envelope-outer: #8f2643;
+  --envelope-inner: #5c1428;
+  --envelope-flap: #a12d4d;
+  --wax-red: #9e1427;
+  --wax-gold: #fedc8b;
   
-  --ticket-bg: #fffdf9;
-  --ticket-border: #dec799;
+  --ticket-bg: #ffffff;
+  --ticket-border: #ebd3b0;
   
   --font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
   --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: 'Great Vibes', 'Alex Brush', cursive;
   
   --transition-smooth: cubic-bezier(0.16, 1, 0.3, 1);
   --transition-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -52,8 +53,13 @@ html, body {
   width: 100%;
   min-height: 100vh;
   overflow-x: hidden;
-  background-color: var(--bg-deep);
-  color: var(--text-light);
+  background-color: var(--bg-canvas);
+  background-image: 
+    radial-gradient(circle at 50% 15%, #ffffff 0%, #fff1f5 42%, #fde6ee 78%, #f7dbe3 100%),
+    radial-gradient(rgba(217, 59, 104, 0.12) 1.2px, transparent 1.2px);
+  background-size: 100% 100%, 32px 32px;
+  background-attachment: fixed;
+  color: var(--text-main);
   font-family: var(--font-sans);
   font-size: 16px;
   line-height: 1.6;
@@ -83,24 +89,25 @@ html, body {
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(200, 158, 82, 0.4);
   border-radius: 9999px;
-  color: #fff;
+  color: #4a1c32;
   font-family: var(--font-sans);
   font-size: 0.825rem;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 18px rgba(180, 50, 85, 0.12);
   transition: all 0.3s ease;
 }
 
 .control-pill:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border-color: rgba(200, 158, 82, 0.7);
   transform: translateY(-1px);
-  box-shadow: 0 6px 24px rgba(230, 57, 107, 0.25);
+  box-shadow: 0 6px 22px rgba(217, 59, 104, 0.22);
 }
 
 /* Experience Container */
@@ -143,15 +150,16 @@ html, body {
   gap: 0.6rem;
   margin-bottom: 2rem;
   font-family: var(--font-serif);
-  font-size: 1.35rem;
+  font-size: 1.4rem;
+  font-weight: 600;
   font-style: italic;
-  letter-spacing: 0.05em;
-  color: var(--parchment-gold-light);
-  text-shadow: 0 2px 10px rgba(200, 158, 82, 0.4);
+  letter-spacing: 0.04em;
+  color: #7b1e38;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.85);
 }
 
 .sparkle-left, .sparkle-right {
-  color: var(--parchment-gold);
+  color: #c49544;
   animation: pulseSparkle 2s ease-in-out infinite alternate;
 }
 
@@ -175,28 +183,30 @@ html, body {
   width: 100%;
   height: 100%;
   background: var(--envelope-inner);
-  border-radius: 12px;
+  border-radius: 14px;
   box-shadow: 
-    0 25px 60px -10px rgba(0, 0, 0, 0.7),
-    0 0 45px rgba(230, 57, 107, 0.15);
+    0 25px 50px -10px rgba(140, 35, 65, 0.35),
+    0 10px 30px rgba(217, 59, 104, 0.18),
+    0 0 0 1px rgba(255, 225, 180, 0.3) inset;
   transform-style: preserve-3d;
   transition: transform 0.4s ease;
 }
 
 .envelope-wrapper:hover .envelope {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
   box-shadow: 
-    0 30px 70px -10px rgba(0, 0, 0, 0.8),
-    0 0 55px rgba(230, 57, 107, 0.3);
+    0 32px 60px -10px rgba(140, 35, 65, 0.45),
+    0 15px 40px rgba(217, 59, 104, 0.28),
+    0 0 0 1px rgba(255, 225, 180, 0.45) inset;
 }
 
 /* Back Wall */
 .envelope-back {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #240c17, #180610);
-  border-radius: 12px;
-  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: linear-gradient(135deg, #6e1732, #4d0e21);
+  border-radius: 14px;
+  border: 1.5px solid rgba(212, 175, 55, 0.35);
 }
 
 /* Letter Preview Inside Pocket */
@@ -277,7 +287,7 @@ html, body {
   margin: 0 auto;
   border-style: solid;
   border-width: 0 190px 145px 190px;
-  border-color: transparent transparent #41182c transparent;
+  border-color: transparent transparent #781c35 transparent;
   border-bottom-left-radius: 12px;
   border-bottom-right-radius: 12px;
   filter: drop-shadow(0 -3px 10px rgba(0, 0, 0, 0.35));
@@ -296,7 +306,7 @@ html, body {
   transform-origin: top center;
   z-index: 5;
   transition: transform 0.85s var(--transition-smooth), z-index 0.3s ease;
-  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
 }
 
 /* Stamp & Postmark */
@@ -309,7 +319,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.92;
 }
 
 .post-stamp {
@@ -322,7 +332,7 @@ html, body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 3px 8px rgba(70, 15, 30, 0.25);
   transform: rotate(4deg);
 }
 
@@ -343,7 +353,7 @@ html, body {
   font-size: 0.5rem;
   font-weight: 700;
   letter-spacing: 0.12em;
-  color: rgba(245, 228, 189, 0.6);
+  color: rgba(245, 228, 189, 0.85);
   text-align: center;
   transform: rotate(-6deg);
 }
@@ -351,6 +361,92 @@ html, body {
 .postal-mark small {
   display: block;
   font-size: 0.45rem;
+}
+
+/* Aesthetic Hand-Addressed Mail Card on Envelope */
+.envelope-addressee {
+  position: absolute;
+  top: 32px;
+  left: 20px;
+  z-index: 8;
+  background: rgba(255, 253, 248, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(200, 158, 82, 0.6);
+  border-radius: 10px;
+  padding: 8px 14px 7px;
+  min-width: 175px;
+  max-width: 215px;
+  box-shadow: 
+    0 8px 24px rgba(60, 15, 30, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.9) inset;
+  transform: rotate(-2.5deg);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.envelope-wrapper:hover .envelope-addressee {
+  transform: rotate(-1deg) scale(1.02);
+  box-shadow: 0 8px 22px rgba(60, 15, 30, 0.3);
+}
+
+.addressee-tag {
+  font-family: var(--font-serif);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8c5623;
+  border-bottom: 1px dashed rgba(200, 158, 82, 0.45);
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+}
+
+.addressee-name-row {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  min-height: 28px;
+}
+
+.addressee-to {
+  font-family: var(--font-serif);
+  font-size: 0.88rem;
+  font-style: italic;
+  font-weight: 600;
+  color: #7b203a;
+}
+
+.addressee-name {
+  font-family: var(--font-script);
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #871936;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.typing-cursor {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 1.25rem;
+  color: var(--rose-primary);
+  font-weight: 400;
+  animation: blinkCursor 0.75s infinite;
+  vertical-align: baseline;
+}
+
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.addressee-sub {
+  font-size: 0.58rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #8f5a73;
+  margin-top: 3px;
 }
 
 /* Wax Seal */
@@ -365,7 +461,7 @@ html, body {
   border-radius: 50%;
   border: none;
   box-shadow: 
-    0 8px 24px rgba(0, 0, 0, 0.6),
+    0 8px 24px rgba(60, 10, 25, 0.5),
     inset 0 2px 4px rgba(255, 255, 255, 0.4),
     inset 0 -3px 6px rgba(0, 0, 0, 0.5),
     0 0 20px rgba(181, 34, 55, 0.5);
@@ -417,7 +513,7 @@ html, body {
 .wax-seal:hover {
   transform: translate(-50%, -50%) scale(1.08);
   box-shadow: 
-    0 12px 30px rgba(0, 0, 0, 0.7),
+    0 12px 30px rgba(60, 10, 25, 0.6),
     0 0 30px rgba(230, 57, 107, 0.8);
 }
 
@@ -429,17 +525,17 @@ html, body {
 .tap-hint {
   text-align: center;
   margin-top: 1.8rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 0.04em;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #6d2843;
+  letter-spacing: 0.03em;
   animation: pulseHint 2s infinite ease-in-out;
 }
 
 .tap-hint span {
   display: inline-block;
-  color: var(--parchment-gold-light);
-  transform: scale(1.1);
+  color: #b8862d;
+  transform: scale(1.15);
 }
 
 /* ==========================================================================
@@ -454,6 +550,12 @@ html, body {
 .envelope.open .wax-seal {
   opacity: 0;
   transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.envelope.open .envelope-addressee {
+  opacity: 0;
+  transform: scale(0.85) translateY(10px);
   pointer-events: none;
 }
 
@@ -568,6 +670,14 @@ html, body {
   font-weight: 600;
   color: var(--text-main);
   line-height: 1.2;
+}
+
+.recipient-name-highlight {
+  color: var(--rose-primary);
+  font-style: italic;
+  position: relative;
+  display: inline-block;
+  text-shadow: 0 1px 15px rgba(217, 59, 104, 0.22);
 }
 
 .gold-divider {
@@ -1238,6 +1348,23 @@ html, body {
   cursor: pointer;
   transition: all 0.25s ease;
   border: none;
+}
+
+.btn-action.download {
+  background: linear-gradient(135deg, #8a1f3d, #c42754);
+  color: #ffffff;
+  box-shadow: 0 4px 16px rgba(196, 39, 84, 0.35);
+  border: 1px solid rgba(255, 215, 130, 0.35);
+}
+
+.btn-action.download:hover {
+  background: linear-gradient(135deg, #a12448, #d93363);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 22px rgba(196, 39, 84, 0.5);
+}
+
+.btn-action.download:active {
+  transform: scale(0.98);
 }
 
 .btn-action.whatsapp {
