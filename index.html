@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>A Special Invitation for You ✨</title>
+  
+  <!-- Google Fonts: Cormorant Garamond for romantic elegance & Plus Jakarta Sans for UI -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Particle & Constellation Background Canvas -->
+  <canvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+  <!-- Sound Toggle Control -->
+  <header class="top-controls">
+    <button id="sound-btn" class="control-pill" aria-label="Toggle sound effects">
+      <span class="icon" id="sound-icon">🔊</span>
+      <span class="label" id="sound-label">Sound: On</span>
+    </button>
+  </header>
+
+  <!-- Main Experience Wrapper -->
+  <main class="experience-container" id="main-container">
+
+    <!-- ================= STAGE 1: ENVELOPE ================= -->
+    <div class="envelope-stage" id="envelope-stage">
+      <div class="envelope-instruction">
+        <span class="sparkle-left">✦</span>
+        <span>A hand-delivered letter just for you</span>
+        <span class="sparkle-right">✦</span>
+      </div>
+
+      <!-- 3D Realistic Envelope -->
+      <div class="envelope-wrapper" id="envelope-wrapper" role="button" tabindex="0" aria-label="Open your special invitation letter">
+        <div class="envelope" id="envelope">
+          <!-- Back Interior & Flaps -->
+          <div class="envelope-back"></div>
+          
+          <!-- Top Triangle Flap (Folds open in 3D) -->
+          <div class="envelope-flap" id="envelope-flap"></div>
+
+          <!-- Inside Letter Peek Preview -->
+          <div class="letter-peek" id="letter-peek">
+            <div class="peek-line"></div>
+            <div class="peek-line short"></div>
+          </div>
+
+          <!-- Front Pocket Flaps (Left, Right, Bottom) -->
+          <div class="envelope-front">
+            <div class="pocket-left"></div>
+            <div class="pocket-right"></div>
+            <div class="pocket-bottom"></div>
+          </div>
+
+          <!-- Vintage Postal Details -->
+          <div class="stamp-wrapper">
+            <div class="post-stamp">
+              <span class="stamp-heart">💌</span>
+              <span class="stamp-text">AIR MAIL</span>
+            </div>
+            <div class="postal-mark">
+              <span>SPECIAL DELIVERY</span>
+              <small>★ EXPRESS LOVE ★</small>
+            </div>
+          </div>
+
+          <!-- Wax Seal Button -->
+          <button class="wax-seal" id="wax-seal" aria-label="Break seal and open letter">
+            <div class="seal-inner">
+              <span class="seal-emblem">❦</span>
+              <span class="seal-label">OPEN</span>
+            </div>
+            <div class="seal-sheen"></div>
+          </button>
+        </div>
+
+        <p class="tap-hint">Tap the wax seal to open <span>✨</span></p>
+      </div>
+    </div>
+
+    <!-- ================= STAGE 2: THE UNFURLED LETTER & QUESTION ================= -->
+    <section class="letter-stage hidden" id="letter-stage" aria-live="polite">
+      <div class="letter-parchment" id="letter-parchment">
+        <!-- Vintage Corner Filigrees -->
+        <div class="filigree top-left"></div>
+        <div class="filigree top-right"></div>
+        <div class="filigree bottom-left"></div>
+        <div class="filigree bottom-right"></div>
+
+        <!-- Envelope Header Note -->
+        <div class="letter-header">
+          <span class="date-badge">Personal & Confidential</span>
+          <h1 class="letter-title">Dearest Someone Special,</h1>
+          <div class="gold-divider"><span>❦</span></div>
+        </div>
+
+        <!-- Romantic Note Content -->
+        <div class="letter-content" id="letter-content">
+          <p class="sweet-intro">
+            Every moment spent with you feels like sunshine on a cloudy afternoon. You bring so much warmth, laughter, and light into my days, and I just can't keep this smile to myself whenever you're around...
+          </p>
+
+          <p class="sweet-highlight">
+            So, without making you wait any longer...
+          </p>
+
+          <!-- The Big Ask -->
+          <div class="proposal-card">
+            <h2 class="question-title">Will you go on a date with me?</h2>
+            <p class="question-subtitle">I promise to make it an unforgettable, magical time. 🌸</p>
+            
+            <!-- Interactive Action Buttons with Dodge Logic -->
+            <div class="decision-arena" id="decision-arena">
+              <button id="btn-yes" class="btn-primary-yes" aria-label="Say Yes">
+                <span class="btn-glow"></span>
+                <span class="btn-text">YES! Absolutely 💖</span>
+              </button>
+              
+              <button id="btn-no" class="btn-playful-no" aria-label="Say No">
+                <span class="btn-no-text" id="btn-no-text">No 🥺</span>
+              </button>
+            </div>
+
+            <!-- Playful feedback toast message when No is attempted -->
+            <div class="plea-message" id="plea-message" aria-live="assertive"></div>
+          </div>
+        </div>
+
+        <!-- ================= STAGE 3: DATE CUSTOMIZER (POST-YES) ================= -->
+        <div class="date-planner hidden" id="date-planner">
+          <div class="celebration-banner">
+            <div class="celebration-badge">✦ SHE/HE SAID YES! ✦</div>
+            <h2 class="celebration-title">You just made my whole year! 🥰</h2>
+            <p class="celebration-sub">Now let's plan the most perfect date together. Customize our agenda below:</p>
+          </div>
+
+          <!-- Selection Steps -->
+          <div class="planner-form">
+            <!-- Step 1: Vibe & Food -->
+            <fieldset class="planner-fieldset">
+              <legend class="fieldset-legend">1. Choose Our Date Vibe & Food 🍜</legend>
+              <div class="choice-grid" id="vibe-choices">
+                
+                <label class="choice-card selected" data-vibe="Special Batangas Lomi Date">
+                  <input type="radio" name="vibe" value="Special Batangas Lomi Date" checked>
+                  <div class="card-icon">🍜</div>
+                  <div class="card-body">
+                    <span class="card-title">Ultimate Lomi Date</span>
+                    <span class="card-desc">Hot steaming Batangas Lomi with overload toppings, crispy chicharon, egg & deep conversations.</span>
+                  </div>
+                  <span class="check-mark">✓</span>
+                </label>
+
+                <label class="choice-card" data-vibe="Cozy Coffee & Pastry Hangout">
+                  <input type="radio" name="vibe" value="Cozy Coffee & Pastry Hangout">
+                  <div class="card-icon">☕</div>
+                  <div class="card-body">
+                    <span class="card-title">Aesthetic Cafe Date</span>
+                    <span class="card-desc">Warm coffee, strawberry croissants, cozy music & taking cute candid photos of you.</span>
+                  </div>
+                  <span class="check-mark">✓</span>
+                </label>
+
+                <label class="choice-card" data-vibe="Sunset Stroll & Late Night Drive">
+                  <input type="radio" name="vibe" value="Sunset Stroll & Late Night Drive">
+                  <div class="card-icon">🌅</div>
+                  <div class="card-body">
+                    <span class="card-title">Sunset & Night Drive</span>
+                    <span class="card-desc">Golden hour walk, windows down, our favorite playlist & stargazing city lights.</span>
+                  </div>
+                  <span class="check-mark">✓</span>
+                </label>
+
+                <label class="choice-card" data-vibe="Movie Night & Blanket Fort">
+                  <input type="radio" name="vibe" value="Movie Night & Blanket Fort">
+                  <div class="card-icon">🎬</div>
+                  <div class="card-body">
+                    <span class="card-title">Cozy Movie Marathon</span>
+                    <span class="card-desc">Cinema favorites or home projector, endless snacks & warm cuddly blanket fort.</span>
+                  </div>
+                  <span class="check-mark">✓</span>
+                </label>
+
+              </div>
+            </fieldset>
+
+            <!-- Step 2: Date / Day -->
+            <fieldset class="planner-fieldset">
+              <legend class="fieldset-legend">2. When are you free? 🗓️</legend>
+              <div class="chip-group" id="time-choices">
+                <label class="chip-pill selected">
+                  <input type="radio" name="schedule" value="This Friday Evening 🌙" checked>
+                  <span>This Friday Evening 🌙</span>
+                </label>
+                <label class="chip-pill">
+                  <input type="radio" name="schedule" value="Saturday Afternoon & Sunset ☀️">
+                  <span>Saturday Afternoon ☀️</span>
+                </label>
+                <label class="chip-pill">
+                  <input type="radio" name="schedule" value="Sunday Chill Day 🌸">
+                  <span>Sunday Chill Day 🌸</span>
+                </label>
+                <label class="chip-pill">
+                  <input type="radio" name="schedule" value="Surprise me whenever you're ready! ✨">
+                  <span>Surprise Me Anytime ✨</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <!-- Step 3: Secret Request / Note -->
+            <div class="planner-fieldset">
+              <label for="custom-note" class="fieldset-legend">3. Any cravings or special requests? 💭</label>
+              <div class="input-wrapper">
+                <input type="text" id="custom-note" placeholder="e.g., Extra chicharon, play my favorite song, dress cozy..." maxlength="120">
+              </div>
+            </div>
+
+            <!-- Finish CTA -->
+            <div class="planner-actions">
+              <button id="btn-lock-date" class="btn-lock-in">
+                <span>Lock In Our Date & Get Ticket 🎟️</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- ================= STAGE 4: BOARDING PASS TICKET ================= -->
+          <div class="ticket-result hidden" id="ticket-result">
+            <div class="ticket-wrapper">
+              <div class="ticket-card" id="date-ticket">
+                <div class="ticket-edge top"></div>
+                <div class="ticket-header">
+                  <div class="ticket-logo">
+                    <span class="heart-symbol">❦</span>
+                    <span class="ticket-brand">OFFICIAL DATE PASS</span>
+                  </div>
+                  <span class="ticket-status">CONFIRMED ✓</span>
+                </div>
+
+                <div class="ticket-main">
+                  <div class="ticket-row">
+                    <div class="ticket-col">
+                      <span class="ticket-lbl">PASSENGER / VIP</span>
+                      <span class="ticket-val highlight">My Favorite Person 💕</span>
+                    </div>
+                    <div class="ticket-col">
+                      <span class="ticket-lbl">DESTINATION</span>
+                      <span class="ticket-val">To My Heart & A Great Time</span>
+                    </div>
+                  </div>
+
+                  <div class="ticket-row">
+                    <div class="ticket-col">
+                      <span class="ticket-lbl">PLANNED VIBE</span>
+                      <span class="ticket-val" id="ticket-vibe-display">Batangas Lomi Date 🍜</span>
+                    </div>
+                    <div class="ticket-col">
+                      <span class="ticket-lbl">SCHEDULE</span>
+                      <span class="ticket-val" id="ticket-time-display">This Friday Evening 🌙</span>
+                    </div>
+                  </div>
+
+                  <div class="ticket-row" id="ticket-note-row">
+                    <div class="ticket-col full-width">
+                      <span class="ticket-lbl">SPECIAL REQUEST</span>
+                      <span class="ticket-val italic" id="ticket-note-display">"Extra chicharon & cute smiles"</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="ticket-perforation">
+                  <div class="notch left"></div>
+                  <div class="dash-line"></div>
+                  <div class="notch right"></div>
+                </div>
+
+                <div class="ticket-footer">
+                  <div class="barcode-area">
+                    <div class="fake-barcode"></div>
+                    <span class="ticket-code">DATE-NO-REFUNDS-FOREVER-💖</span>
+                  </div>
+                  <div class="ticket-stamp">APPROVED WITH LOVE</div>
+                </div>
+                <div class="ticket-edge bottom"></div>
+              </div>
+            </div>
+
+            <!-- RSVP Sharing Buttons -->
+            <div class="rsvp-button-group">
+              <button id="btn-share-whatsapp" class="btn-action whatsapp">
+                <span>💬 Send via WhatsApp</span>
+              </button>
+              <button id="btn-copy-rsvp" class="btn-action copy">
+                <span id="copy-text">📋 Copy Sweet RSVP</span>
+              </button>
+              <button id="btn-reset-choices" class="btn-action secondary">
+                <span>✏️ Change Choices</span>
+              </button>
+            </div>
+            <p class="rsvp-copy-toast" id="rsvp-copy-toast">Copied to clipboard! Send it to them now 💕</p>
+          </div>
+        </div>
+
+        <!-- Signature Footer -->
+        <div class="letter-footer">
+          <p class="closing">With all my love & fondest hopes,</p>
+          <p class="signature">Yours Always ❦</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
