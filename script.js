@@ -467,15 +467,40 @@ document.addEventListener('DOMContentLoaded', () => {
     dodgeCount++;
     soundEngine.playDodgeBoop();
 
-    // Calculate displacement within arena bounds
+    // Calculate displacement safely bounded within arena / card
     const arenaRect = decisionArena.getBoundingClientRect();
     const btnRect = btnNo.getBoundingClientRect();
 
-    const maxOffsetX = Math.min(140, arenaRect.width / 2 - btnRect.width / 2);
-    const maxOffsetY = 45;
+    // Retrieve current translate offsets from transform matrix
+    let currentTx = 0;
+    let currentTy = 0;
+    const computedStyle = window.getComputedStyle(btnNo);
+    const matrix = computedStyle.transform;
+    if (matrix && matrix !== 'none') {
+      const match = matrix.match(/matrix\(([^)]+)\)/);
+      if (match) {
+        const parts = match[1].split(',').map(n => parseFloat(n.trim()));
+        if (parts.length >= 6) {
+          currentTx = parts[4];
+          currentTy = parts[5];
+        }
+      }
+    }
 
-    const randomX = (Math.random() * 2 - 1) * maxOffsetX;
-    const randomY = (Math.random() * 2 - 1) * maxOffsetY;
+    const naturalLeft = btnRect.left - currentTx;
+
+    // Strict horizontal boundaries within decisionArena with padding
+    const padding = 12;
+    const minX = (arenaRect.left + padding) - naturalLeft;
+    const maxX = (arenaRect.right - padding - btnRect.width) - naturalLeft;
+    const minY = -32;
+    const maxY = 32;
+
+    const safeMinX = Math.min(minX, maxX);
+    const safeMaxX = Math.max(minX, maxX);
+
+    const randomX = Math.round(safeMinX + Math.random() * (safeMaxX - safeMinX));
+    const randomY = Math.round(minY + Math.random() * (maxY - minY));
 
     btnNo.style.transform = `translate(${randomX}px, ${randomY}px)`;
 
@@ -488,8 +513,11 @@ document.addEventListener('DOMContentLoaded', () => {
       pleaMessage.style.opacity = '1';
     }
 
-    yesScale += 0.08;
-    btnYes.style.transform = `scale(${yesScale})`;
+    // Grow Yes button with a reasonable ceiling so it stays inside mobile viewport
+    if (yesScale < 1.4) {
+      yesScale += 0.06;
+      btnYes.style.transform = `scale(${yesScale})`;
+    }
   }
 
   if (btnNo) {
