@@ -168,6 +168,38 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.start(now);
       osc.stop(now + 0.035);
     }
+
+    playStepTone(step = 1) {
+      if (!this.enabled) return;
+      this.init();
+      if (!this.ctx) return;
+
+      const stepChords = {
+        1: [523.25, 659.25],         // C5, E5 (warm melodic chime)
+        2: [659.25, 783.99],         // E5, G5 (rising sweet chord)
+        3: [783.99, 1046.50, 1318.5] // G5, C6, E6 (sparkling resolution)
+      };
+
+      const notes = stepChords[step] || [523.25, 659.25];
+      notes.forEach((freq, idx) => {
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = 'sine';
+        const startTime = this.ctx.currentTime + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, startTime);
+
+        gain.gain.setValueAtTime(0, startTime);
+        gain.gain.linearRampToValueAtTime(0.12, startTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.38);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(startTime);
+        osc.stop(startTime + 0.4);
+      });
+    }
   }
 
   const soundEngine = new RomanticAudio();
@@ -552,41 +584,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================================================
-  // 7. DATE PLANNER CHOICES & ITINERARY
+  // 7. DATE PLANNER CHOICES & DYNAMIC INTERACTION SUITE
   // ==========================================================================
-  const vibeCards = document.querySelectorAll('.choice-card');
-  let selectedVibe = "Special Batangas Lomi Date";
 
-  vibeCards.forEach(card => {
-    card.addEventListener('click', () => {
-      vibeCards.forEach(c => c.classList.remove('selected'));
-      card.classList.add('selected');
-      const radio = card.querySelector('input[type="radio"]');
-      if (radio) {
-        radio.checked = true;
-        selectedVibe = radio.value;
-      }
-      soundEngine.playClick();
-    });
-  });
-
-  const chipPills = document.querySelectorAll('.chip-pill');
-  let selectedSchedule = "This Friday Evening 🌙";
-
-  chipPills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      chipPills.forEach(p => p.classList.remove('selected'));
-      pill.classList.add('selected');
-      const radio = pill.querySelector('input[type="radio"]');
-      if (radio) {
-        radio.checked = true;
-        selectedSchedule = radio.value;
-      }
-      soundEngine.playClick();
-    });
-  });
-
-  // Lock In Date CTA & Generate Boarding Pass
+  // Elements for CTA & Downstream Pass
   const btnLockDate = document.getElementById('btn-lock-date');
   const ticketResult = document.getElementById('ticket-result');
   const vibeAnimationStage = document.getElementById('vibe-animation-stage');
@@ -602,6 +603,190 @@ document.addEventListener('DOMContentLoaded', () => {
   const ticketTimeDisplay = document.getElementById('ticket-time-display');
   const ticketNoteDisplay = document.getElementById('ticket-note-display');
   const customNoteInput = document.getElementById('custom-note');
+
+  // Stepper Elements
+  const stepNode1 = document.getElementById('step-node-1');
+  const stepNode2 = document.getElementById('step-node-2');
+  const stepNode3 = document.getElementById('step-node-3');
+  const stepConnector1 = document.getElementById('step-connector-1');
+  const stepConnector2 = document.getElementById('step-connector-2');
+
+  // Reaction Elements
+  const vibeReaction = document.getElementById('vibe-reaction');
+  const vibeReactionText = document.getElementById('vibe-reaction-text');
+  const timeReaction = document.getElementById('time-reaction');
+  const timeReactionText = document.getElementById('time-reaction-text');
+  const noteReaction = document.getElementById('note-reaction');
+  const noteReactionText = document.getElementById('note-reaction-text');
+
+  // Romantic reaction messages
+  const vibeReactions = {
+    "Special Batangas Lomi Date": "Ultimate Batangas Lomi selected! Steaming broth & deep talks await 💕",
+    "Cozy Coffee & Pastry Hangout": "Aesthetic Cafe Date chosen! Warm coffee, sweet pastries & cute photos ☕",
+    "Sunset Stroll & Late Night Drive": "Sunset & Night Drive locked in! Golden hour skies & car singing together 🌅",
+    "Movie Night & Blanket Fort": "Cozy Movie Marathon ready! Blanket fort, warm cuddles & favorite films 🎬"
+  };
+
+  const scheduleReactions = {
+    "This Friday Evening 🌙": "Friday evening confirmed! The perfect start to our weekend together 🌙",
+    "Saturday Afternoon & Sunset ☀️": "Saturday afternoon & golden hour! Perfect unhurried weekend magic ☀️",
+    "Sunday Chill Day 🌸": "Sunday chill date! Relaxed vibes, delicious food & warm smiles 🌸",
+    "Surprise me whenever you're ready! ✨": "Surprise date mode on! Get ready for something truly unforgettable ✨"
+  };
+
+  // Floating Choice Hearts Burst
+  function spawnChoiceHearts(sourceEl, event) {
+    let clientX, clientY;
+    if (event && event.clientX && event.clientY) {
+      clientX = event.clientX;
+      clientY = event.clientY;
+    } else if (sourceEl) {
+      const rect = sourceEl.getBoundingClientRect();
+      clientX = rect.left + rect.width / 2;
+      clientY = rect.top + rect.height / 2;
+    } else {
+      clientX = window.innerWidth / 2;
+      clientY = window.innerHeight / 2;
+    }
+
+    const emojis = ['💖', '✨', '💕', '🌸', '🥰'];
+    for (let i = 0; i < 5; i++) {
+      const heart = document.createElement('span');
+      heart.className = 'floating-choice-heart';
+      heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+
+      const angle = (Math.random() * 120 - 150) * (Math.PI / 180); // Upwards fountain arc
+      const dist = Math.random() * 55 + 35;
+      const tx = Math.cos(angle) * dist;
+      const ty = Math.sin(angle) * dist;
+      const rot = Math.random() * 50 - 25;
+
+      heart.style.left = `${clientX}px`;
+      heart.style.top = `${clientY}px`;
+      heart.style.setProperty('--tx', `${tx}px`);
+      heart.style.setProperty('--ty', `${ty}px`);
+      heart.style.setProperty('--rot', `${rot}deg`);
+
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 900);
+    }
+  }
+
+  function triggerReactionAnimation(element) {
+    if (!element) return;
+    element.style.animation = 'none';
+    void element.offsetWidth; // DOM reflow
+    element.style.animation = '';
+  }
+
+  // 1. Vibe Selection Cards
+  const vibeCards = document.querySelectorAll('.choice-card');
+  let selectedVibe = "Special Batangas Lomi Date";
+
+  vibeCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+      vibeCards.forEach(c => {
+        c.classList.remove('selected', 'card-pop');
+        const icon = c.querySelector('.card-icon');
+        if (icon) icon.classList.remove('anim-wiggle');
+      });
+
+      card.classList.add('selected', 'card-pop');
+      const icon = card.querySelector('.card-icon');
+      if (icon) {
+        icon.classList.add('anim-wiggle');
+        setTimeout(() => icon.classList.remove('anim-wiggle'), 550);
+      }
+
+      const radio = card.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+        selectedVibe = radio.value;
+      }
+
+      // Dynamic reaction text
+      if (vibeReactionText && vibeReactions[selectedVibe]) {
+        vibeReactionText.textContent = vibeReactions[selectedVibe];
+        triggerReactionAnimation(vibeReaction);
+      }
+
+      // Stepper node 1 progress
+      if (stepNode1) stepNode1.classList.add('active', 'completed');
+      if (stepConnector1) stepConnector1.classList.add('completed');
+      if (stepNode2) stepNode2.classList.add('active');
+
+      // Tactile sound and floating hearts
+      soundEngine.playStepTone(1);
+      spawnChoiceHearts(card, e);
+
+      // Add ready pulse to CTA button
+      if (btnLockDate) btnLockDate.classList.add('ready-pulse');
+    });
+  });
+
+  // 2. Time / Schedule Chip Pills
+  const chipPills = document.querySelectorAll('.chip-pill');
+  let selectedSchedule = "This Friday Evening 🌙";
+
+  chipPills.forEach(pill => {
+    pill.addEventListener('click', (e) => {
+      chipPills.forEach(p => p.classList.remove('selected', 'pill-pop'));
+      pill.classList.add('selected', 'pill-pop');
+
+      const radio = pill.querySelector('input[type="radio"]');
+      if (radio) {
+        radio.checked = true;
+        selectedSchedule = radio.value;
+      }
+
+      // Dynamic reaction text
+      if (timeReactionText && scheduleReactions[selectedSchedule]) {
+        timeReactionText.textContent = scheduleReactions[selectedSchedule];
+        triggerReactionAnimation(timeReaction);
+      }
+
+      // Stepper node 2 progress
+      if (stepNode2) stepNode2.classList.add('active', 'completed');
+
+      // Tactile sound and floating hearts
+      soundEngine.playStepTone(2);
+      spawnChoiceHearts(pill, e);
+
+      // Add ready pulse to CTA button
+      if (btnLockDate) btnLockDate.classList.add('ready-pulse');
+    });
+  });
+
+  // 3. Special Request / Secret Note Listener
+  if (customNoteInput) {
+    customNoteInput.addEventListener('input', () => {
+      const val = customNoteInput.value.trim();
+      if (val.length > 0) {
+        if (noteReactionText) {
+          noteReactionText.textContent = `Noted with love: "${val}" — Consider it done! 💖`;
+          triggerReactionAnimation(noteReaction);
+        }
+        if (stepNode3) stepNode3.classList.add('active', 'completed');
+        if (stepConnector2) stepConnector2.classList.add('completed');
+      } else {
+        if (noteReactionText) {
+          noteReactionText.textContent = `Your wish is my command! We'll make sure it's perfect 💖`;
+        }
+        if (stepNode3) stepNode3.classList.remove('completed');
+        if (stepConnector2) stepConnector2.classList.remove('completed');
+      }
+      if (btnLockDate) btnLockDate.classList.add('ready-pulse');
+    });
+
+    customNoteInput.addEventListener('focus', () => {
+      if (stepNode3) stepNode3.classList.add('active');
+    });
+  }
+
+  // Pre-activate ready pulse for delightful call to action
+  if (btnLockDate) {
+    btnLockDate.classList.add('ready-pulse');
+  }
 
   let currentCustomNote = "";
   let cartoonTransitionTimer = null;

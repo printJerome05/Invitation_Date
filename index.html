@@ -152,8 +152,29 @@
 
           <!-- Selection Steps -->
           <div class="planner-form">
+            <!-- Romantic Step Tracker -->
+            <div class="planner-stepper" id="planner-stepper" aria-label="Date Planning Steps">
+              <div class="step-node active completed" id="step-node-1" data-step="1">
+                <span class="step-icon">🍜</span>
+                <span class="step-label">1. The Vibe</span>
+                <span class="step-check">✓</span>
+              </div>
+              <div class="step-connector completed" id="step-connector-1"></div>
+              <div class="step-node active completed" id="step-node-2" data-step="2">
+                <span class="step-icon">🗓️</span>
+                <span class="step-label">2. The Time</span>
+                <span class="step-check">✓</span>
+              </div>
+              <div class="step-connector" id="step-connector-2"></div>
+              <div class="step-node" id="step-node-3" data-step="3">
+                <span class="step-icon">💭</span>
+                <span class="step-label">3. Special Wish</span>
+                <span class="step-check">✓</span>
+              </div>
+            </div>
+
             <!-- Step 1: Vibe & Food -->
-            <fieldset class="planner-fieldset">
+            <fieldset class="planner-fieldset" id="fieldset-step-1">
               <legend class="fieldset-legend">1. Choose Our Date Vibe & Food 🍜</legend>
               <div class="choice-grid" id="vibe-choices">
                 
@@ -198,10 +219,14 @@
                 </label>
 
               </div>
+              <div class="step-reaction" id="vibe-reaction" aria-live="polite">
+                <span class="reaction-sparkle">✨</span>
+                <span class="reaction-text" id="vibe-reaction-text">Ultimate Batangas Lomi selected! Steaming broth & deep talks await 💕</span>
+              </div>
             </fieldset>
 
             <!-- Step 2: Date / Day -->
-            <fieldset class="planner-fieldset">
+            <fieldset class="planner-fieldset" id="fieldset-step-2">
               <legend class="fieldset-legend">2. When are you free? 🗓️</legend>
               <div class="chip-group" id="time-choices">
                 <label class="chip-pill selected">
@@ -221,13 +246,21 @@
                   <span>Surprise Me Anytime ✨</span>
                 </label>
               </div>
+              <div class="step-reaction" id="time-reaction" aria-live="polite">
+                <span class="reaction-sparkle">✨</span>
+                <span class="reaction-text" id="time-reaction-text">Friday evening confirmed! Counting down every second 🌙</span>
+              </div>
             </fieldset>
 
             <!-- Step 3: Secret Request / Note -->
-            <div class="planner-fieldset">
+            <div class="planner-fieldset" id="fieldset-step-3">
               <label for="custom-note" class="fieldset-legend">3. Any cravings or special requests? 💭</label>
               <div class="input-wrapper">
                 <input type="text" id="custom-note" placeholder="e.g., Extra chicharon, play my favorite song, dress cozy..." maxlength="120">
+              </div>
+              <div class="step-reaction" id="note-reaction" aria-live="polite">
+                <span class="reaction-sparkle">✨</span>
+                <span class="reaction-text" id="note-reaction-text">Your wish is my command! We'll make sure it's perfect 💖</span>
               </div>
             </div>
 
