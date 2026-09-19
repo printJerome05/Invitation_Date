@@ -239,6 +239,26 @@
             </div>
           </div>
 
+          <!-- ================= STAGE 3.5: ROMANTIC CARTOON TRANSITION ================= -->
+          <div class="vibe-animation-stage hidden" id="vibe-animation-stage" aria-live="polite">
+            <div class="cartoon-card" id="cartoon-card">
+              <div class="cartoon-scene" id="cartoon-scene">
+                <!-- Injected dynamically via JS based on selected date vibe -->
+              </div>
+              <div class="cartoon-caption-area">
+                <div class="cartoon-badge" id="cartoon-badge">✦ PREPARING OUR DATE ✦</div>
+                <h3 class="cartoon-title" id="cartoon-title">Cooking Up Our Lomi Date! 🍜</h3>
+                <p class="cartoon-subtitle" id="cartoon-subtitle">Steaming hot soup, overload chicharon & sweet moments...</p>
+                <div class="cartoon-loader">
+                  <div class="loader-track">
+                    <div class="loader-bar" id="cartoon-loader-bar"></div>
+                  </div>
+                  <span class="loader-status" id="cartoon-loader-status">Printing VIP Date Pass 🎟️</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- ================= STAGE 4: BOARDING PASS TICKET ================= -->
           <div class="ticket-result hidden" id="ticket-result">
             <div class="ticket-wrapper">
@@ -300,23 +320,17 @@
               </div>
             </div>
 
-            <!-- RSVP Sharing & Download Buttons -->
-            <div class="rsvp-button-group">
-              <button id="btn-download-ticket" class="btn-action download" aria-label="Download Official Date Pass">
-                <span id="download-icon">📥</span>
-                <span id="download-text">Download Ticket 🎟️</span>
+            <!-- Ticket Action Area -->
+            <div class="ticket-actions">
+              <button id="btn-download-ticket" class="btn-download-ticket" aria-label="Download Official Date Pass">
+                <span class="btn-pass-icon" id="download-icon">🎟️</span>
+                <span id="download-text">Download Date Pass</span>
               </button>
-              <button id="btn-share-whatsapp" class="btn-action whatsapp">
-                <span>💬 Send via WhatsApp</span>
-              </button>
-              <button id="btn-copy-rsvp" class="btn-action copy">
-                <span id="copy-text">📋 Copy Sweet RSVP</span>
-              </button>
-              <button id="btn-reset-choices" class="btn-action secondary">
+              <p class="download-caption">Saves your high-resolution date pass image</p>
+              <button id="btn-reset-choices" class="btn-change-choices" aria-label="Change choices">
                 <span>✏️ Change Choices</span>
               </button>
             </div>
-            <p class="rsvp-copy-toast" id="rsvp-copy-toast">Copied to clipboard! Send it to them now 💕</p>
           </div>
         </div>
 

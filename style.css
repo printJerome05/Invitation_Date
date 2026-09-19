@@ -1115,6 +1115,343 @@ html, body {
 }
 
 /* ==========================================================================
+   STAGE 3.5: ROMANTIC CARTOON TRANSITION ANIMATION
+   ========================================================================== */
+
+.vibe-animation-stage {
+  width: 100%;
+  max-width: 480px;
+  margin: 1.25rem auto;
+  animation: fadeInScale 0.6s var(--transition-smooth) forwards;
+}
+
+.vibe-animation-stage.hidden {
+  display: none;
+}
+
+.cartoon-card {
+  position: relative;
+  background: #ffffff;
+  border: 1.5px solid var(--ticket-border, #ebd3b0);
+  border-radius: 20px;
+  padding: 2.25rem 1.75rem 2rem;
+  box-shadow: 
+    0 22px 55px rgba(45, 20, 36, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.95) inset,
+    0 0 40px rgba(230, 57, 107, 0.08);
+  text-align: center;
+  overflow: hidden;
+  background-image: radial-gradient(circle at 50% 30%, #fff7f9 0%, #ffffff 75%);
+}
+
+.cartoon-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #d93b68, #fedc8b, #d93b68);
+  background-size: 200% 100%;
+  animation: shimmerGlow 2s linear infinite;
+}
+
+.cartoon-scene {
+  width: 100%;
+  max-width: 320px;
+  height: 200px;
+  margin: 0 auto 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cartoon-scene svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 8px 18px rgba(121, 21, 48, 0.12));
+}
+
+.cartoon-caption-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cartoon-badge {
+  display: inline-block;
+  padding: 0.25rem 0.85rem;
+  background: #fff0f4;
+  color: #791530;
+  border: 1px solid rgba(217, 59, 104, 0.25);
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 0.55rem;
+}
+
+.cartoon-title {
+  font-family: var(--font-serif);
+  font-size: 1.95rem;
+  font-weight: 700;
+  color: #2b1129;
+  line-height: 1.2;
+  margin-bottom: 0.35rem;
+}
+
+.cartoon-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.92rem;
+  color: #78586f;
+  line-height: 1.5;
+  max-width: 380px;
+  margin-bottom: 1.35rem;
+}
+
+.cartoon-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.loader-track {
+  width: 100%;
+  max-width: 250px;
+  height: 7px;
+  background: rgba(200, 158, 82, 0.18);
+  border-radius: 9999px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.loader-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #791530, #d93b68, #fedc8b, #791530);
+  background-size: 250% 100%;
+  border-radius: 9999px;
+  animation: progressFill 2.75s cubic-bezier(0.4, 0, 0.2, 1) forwards, shimmerGlow 1.8s linear infinite;
+}
+
+.loader-status {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #8f7685;
+}
+
+/* ==========================================================================
+   CARTOON MICRO-ANIMATIONS (VECTOR SVG ELEMENTS)
+   ========================================================================== */
+
+/* 1. LOMI DATE KEYFRAMES */
+.anim-steam-1 {
+  animation: steamRise1 2.2s ease-out infinite;
+  transform-origin: center bottom;
+}
+
+.anim-steam-2 {
+  animation: steamRise2 2.5s 0.4s ease-out infinite;
+  transform-origin: center bottom;
+}
+
+.anim-steam-3 {
+  animation: steamRise3 2.1s 0.8s ease-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes steamRise1 {
+  0% { transform: translateY(0) scale(0.7) rotate(-2deg); opacity: 0; }
+  35% { opacity: 0.85; }
+  100% { transform: translateY(-34px) scale(1.25) rotate(8deg); opacity: 0; }
+}
+
+@keyframes steamRise2 {
+  0% { transform: translateY(0) scale(0.6) rotate(3deg); opacity: 0; }
+  35% { opacity: 0.85; }
+  100% { transform: translateY(-40px) scale(1.35) rotate(-6deg); opacity: 0; }
+}
+
+@keyframes steamRise3 {
+  0% { transform: translateY(0) scale(0.75) rotate(-4deg); opacity: 0; }
+  35% { opacity: 0.8; }
+  100% { transform: translateY(-36px) scale(1.2) rotate(4deg); opacity: 0; }
+}
+
+.anim-chopsticks {
+  animation: chopstickLift 2.6s ease-in-out infinite;
+  transform-origin: 195px 65px;
+}
+
+@keyframes chopstickLift {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-7px) rotate(-4deg); }
+}
+
+.anim-soup-glow {
+  animation: soupPulse 2s ease-in-out infinite alternate;
+}
+
+@keyframes soupPulse {
+  0% { opacity: 0.6; transform: scale(0.98); }
+  100% { opacity: 0.95; transform: scale(1.02); }
+}
+
+/* 2. CAFE DATE KEYFRAMES */
+.anim-cup-left {
+  animation: cupClinkLeft 2.4s ease-in-out infinite;
+  transform-origin: 120px 145px;
+}
+
+.anim-cup-right {
+  animation: cupClinkRight 2.4s ease-in-out infinite;
+  transform-origin: 195px 145px;
+}
+
+@keyframes cupClinkLeft {
+  0%, 100% { transform: rotate(0deg) translate(0, 0); }
+  45% { transform: rotate(-8deg) translate(-3px, -2px); }
+  55% { transform: rotate(5deg) translate(4px, -1px); }
+  65% { transform: rotate(0deg) translate(0, 0); }
+}
+
+@keyframes cupClinkRight {
+  0%, 100% { transform: rotate(0deg) translate(0, 0); }
+  45% { transform: rotate(8deg) translate(3px, -2px); }
+  55% { transform: rotate(-5deg) translate(-4px, -1px); }
+  65% { transform: rotate(0deg) translate(0, 0); }
+}
+
+.anim-cafe-sparkle {
+  animation: sparkleTwinkle 1.8s ease-in-out infinite;
+  transform-origin: 0px 0px;
+}
+
+@keyframes sparkleTwinkle {
+  0%, 100% { transform: scale(0.6) rotate(0deg); opacity: 0.2; }
+  50% { transform: scale(1.2) rotate(45deg); opacity: 1; }
+}
+
+.anim-music-note {
+  animation: musicFloat 2.8s ease-out infinite;
+  transform-origin: center;
+}
+
+@keyframes musicFloat {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { transform: translate(12px, -30px) scale(1.1) rotate(15deg); opacity: 0; }
+}
+
+/* 3. SUNSET DRIVE KEYFRAMES */
+.anim-car-body {
+  animation: carSuspension 1.6s ease-in-out infinite;
+  transform-origin: 50px 30px;
+}
+
+@keyframes carSuspension {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2.5px); }
+}
+
+.anim-car-wheel {
+  animation: wheelSpin 0.7s linear infinite;
+  transform-origin: 0px 0px;
+}
+
+@keyframes wheelSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.anim-road-lines {
+  animation: roadMove 0.8s linear infinite;
+}
+
+@keyframes roadMove {
+  0% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -40; }
+}
+
+.anim-heart-exhaust {
+  animation: exhaustDrift 2.2s ease-out infinite;
+  transform-origin: 0px 0px;
+}
+
+@keyframes exhaustDrift {
+  0% { transform: translate(0, 0) scale(0.6); opacity: 0; }
+  30% { opacity: 0.9; }
+  100% { transform: translate(-26px, -20px) scale(1.2) rotate(-15deg); opacity: 0; }
+}
+
+/* 4. MOVIE NIGHT KEYFRAMES */
+.anim-fairy-light {
+  animation: lightPulse 1.6s ease-in-out infinite alternate;
+}
+
+.anim-fairy-light:nth-child(2n) {
+  animation-delay: 0.5s;
+}
+
+.anim-fairy-light:nth-child(3n) {
+  animation-delay: 0.9s;
+}
+
+@keyframes lightPulse {
+  0% { opacity: 0.35; filter: drop-shadow(0 0 1px #fedc8b); }
+  100% { opacity: 1; filter: drop-shadow(0 0 8px #fedc8b); }
+}
+
+.anim-projector-beam {
+  animation: beamFlicker 2.5s ease-in-out infinite;
+  transform-origin: 90px 115px;
+}
+
+@keyframes beamFlicker {
+  0%, 100% { opacity: 0.45; }
+  45% { opacity: 0.75; }
+  55% { opacity: 0.55; }
+  85% { opacity: 0.7; }
+}
+
+.anim-popcorn-heart {
+  animation: popBounce 1.9s ease-out infinite;
+  transform-origin: center bottom;
+}
+
+@keyframes popBounce {
+  0%, 100% { transform: translateY(0) scale(0.9); opacity: 0.8; }
+  45% { transform: translateY(-16px) scale(1.15) rotate(12deg); opacity: 1; }
+  75% { transform: translateY(-6px) scale(1) rotate(-8deg); }
+}
+
+/* Common Keyframe Helpers */
+@keyframes fadeInScale {
+  0% {
+    opacity: 0;
+    transform: scale(0.94) translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes progressFill {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+@keyframes shimmerGlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+
+/* ==========================================================================
    STAGE 4: LUXURY VIP BOARDING PASS TICKET
    ========================================================================== */
 
@@ -1323,101 +1660,86 @@ html, body {
   opacity: 0.85;
 }
 
-/* RSVP Actions */
-.rsvp-button-group {
+/* Ticket Actions */
+.ticket-actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  max-width: 480px;
-  margin: 0 auto;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 440px;
+  margin: 1.5rem auto 0;
+  gap: 0.5rem;
 }
 
-.btn-action {
-  flex: 1;
-  min-width: 140px;
+.btn-download-ticket {
+  width: 100%;
+  max-width: 380px;
+  min-height: 52px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  padding: 0.85rem 1.25rem;
+  gap: 0.65rem;
+  padding: 0.95rem 2rem;
   border-radius: 9999px;
-  font-family: var(--font-sans);
-  font-size: 0.92rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: none;
-}
-
-.btn-action.download {
-  background: linear-gradient(135deg, #8a1f3d, #c42754);
+  background: linear-gradient(135deg, #7b1834 0%, #a6244a 52%, #c92c57 100%);
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(196, 39, 84, 0.35);
-  border: 1px solid rgba(255, 215, 130, 0.35);
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border: 1.2px solid rgba(254, 220, 139, 0.45);
+  box-shadow: 
+    0 10px 28px rgba(123, 24, 52, 0.35),
+    0 2px 6px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 0.3s var(--transition-smooth);
 }
 
-.btn-action.download:hover {
-  background: linear-gradient(135deg, #a12448, #d93363);
+.btn-download-ticket:hover {
+  background: linear-gradient(135deg, #8c1a3b 0%, #b82650 52%, #db3363 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 22px rgba(196, 39, 84, 0.5);
+  box-shadow: 
+    0 14px 34px rgba(123, 24, 52, 0.45),
+    0 0 16px rgba(254, 220, 139, 0.3);
 }
 
-.btn-action.download:active {
+.btn-download-ticket:active {
   transform: scale(0.98);
 }
 
-.btn-action.whatsapp {
-  background: #25d366;
-  color: #ffffff;
-  box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+.btn-pass-icon {
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
-.btn-action.whatsapp:hover {
-  background: #20ba5a;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
-}
-
-.btn-action.copy {
-  background: var(--rose-primary);
-  color: #ffffff;
-  box-shadow: 0 4px 15px var(--rose-glow);
-}
-
-.btn-action.copy:hover {
-  background: var(--rose-hover);
-  transform: translateY(-2px);
-}
-
-.btn-action.secondary {
-  flex: 1 1 100%;
-  background: transparent;
+.download-caption {
+  font-size: 0.82rem;
   color: var(--text-muted);
-  font-size: 0.85rem;
-  padding: 0.5rem;
-}
-
-.btn-action.secondary:hover {
-  color: var(--text-main);
-  text-decoration: underline;
-}
-
-.rsvp-copy-toast {
   text-align: center;
-  margin-top: 1rem;
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: #1b7a37;
-  opacity: 0;
-  transform: translateY(5px);
-  transition: all 0.3s ease;
+  margin-top: 0.15rem;
+  letter-spacing: 0.01em;
 }
 
-.rsvp-copy-toast.show {
-  opacity: 1;
-  transform: translateY(0);
+.btn-change-choices {
+  background: transparent;
+  border: none;
+  color: #8a6c81;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  transition: color 0.2s ease, transform 0.2s ease;
+  margin-top: 0.2rem;
 }
+
+.btn-change-choices:hover {
+  color: #791530;
+  text-decoration: underline;
+  transform: translateY(-1px);
+}
+
 
 /* ==========================================================================
    KEYFRAME ANIMATIONS
@@ -1649,18 +1971,17 @@ html, body {
     width: 115px;
   }
 
-  .rsvp-button-group {
-    flex-direction: column;
+  .ticket-actions {
     width: 100%;
     max-width: 360px;
-    gap: 0.75rem;
+    gap: 0.5rem;
   }
 
-  .btn-action {
+  .btn-download-ticket {
     width: 100%;
-    min-height: 48px;
-    padding: 0.85rem 1.25rem;
-    font-size: 0.95rem;
+    min-height: 50px;
+    padding: 0.9rem 1.5rem;
+    font-size: 1rem;
     white-space: nowrap;
   }
 }

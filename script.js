@@ -589,6 +589,14 @@ document.addEventListener('DOMContentLoaded', () => {
   // Lock In Date CTA & Generate Boarding Pass
   const btnLockDate = document.getElementById('btn-lock-date');
   const ticketResult = document.getElementById('ticket-result');
+  const vibeAnimationStage = document.getElementById('vibe-animation-stage');
+  const cartoonScene = document.getElementById('cartoon-scene');
+  const cartoonBadge = document.getElementById('cartoon-badge');
+  const cartoonTitle = document.getElementById('cartoon-title');
+  const cartoonSubtitle = document.getElementById('cartoon-subtitle');
+  const cartoonLoaderStatus = document.getElementById('cartoon-loader-status');
+  const cartoonLoaderBar = document.getElementById('cartoon-loader-bar');
+
   const ticketPassengerDisplay = document.getElementById('ticket-passenger-display');
   const ticketVibeDisplay = document.getElementById('ticket-vibe-display');
   const ticketTimeDisplay = document.getElementById('ticket-time-display');
@@ -596,11 +604,360 @@ document.addEventListener('DOMContentLoaded', () => {
   const customNoteInput = document.getElementById('custom-note');
 
   let currentCustomNote = "";
+  let cartoonTransitionTimer = null;
 
+  // ==========================================================================
+  // ROMANTIC CARTOON SCENE TEMPLATES (4 BESPOKE VECTOR ANIMATIONS)
+  // ==========================================================================
+  const VIBE_SCENES = {
+    "Special Batangas Lomi Date": {
+      badge: "✦ COOKING UP LOVE ✦",
+      title: "Cooking Up Our Lomi Date! 🍜",
+      subtitle: "Steaming hot Batangas soup, overload crispy chicharon & deep conversations...",
+      status: "Simmering with love & printing VIP pass 🎟️",
+      svg: `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="lomiGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffd166" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#ffd166" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="brothGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#f39c12"/>
+            <stop offset="100%" stop-color="#d35400"/>
+          </linearGradient>
+          <linearGradient id="bowlGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#9e2646"/>
+            <stop offset="100%" stop-color="#601227"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="160" cy="120" rx="110" ry="42" fill="url(#lomiGlow)" class="anim-soup-glow"/>
+        <g class="anim-steam-1">
+          <path d="M135,70 Q130,50 140,35 Q145,25 138,15" stroke="#ff758f" stroke-width="3" fill="none" stroke-linecap="round"/>
+          <path d="M138,15 C136,11 130,11 130,16 C130,21 138,26 138,26 C138,26 146,21 146,16 C146,11 140,11 138,15 Z" fill="#d93b68"/>
+        </g>
+        <g class="anim-steam-2">
+          <path d="M165,65 Q175,45 165,30 Q158,18 168,8" stroke="#ffd166" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M168,8 C166,4 160,4 160,9 C160,14 168,19 168,19 C168,19 176,14 176,9 C176,4 170,4 168,8 Z" fill="#e6396b"/>
+        </g>
+        <g class="anim-steam-3">
+          <path d="M190,75 Q185,55 195,40 Q202,28 196,18" stroke="#ff9ebb" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <path d="M196,18 C194,14 190,14 190,18 C190,22 196,25 196,25 C196,25 202,22 202,18 C202,14 198,14 196,18 Z" fill="#ff758f"/>
+        </g>
+        <ellipse cx="160" cy="182" rx="72" ry="10" fill="#2d1424" opacity="0.15"/>
+        <path d="M78,112 Q76,176 160,180 Q244,176 242,112 Z" fill="url(#bowlGrad)"/>
+        <ellipse cx="160" cy="180" rx="38" ry="7" fill="#4d0e1e"/>
+        <ellipse cx="160" cy="112" rx="82" ry="28" fill="#5c1428"/>
+        <ellipse cx="160" cy="112" rx="82" ry="28" fill="none" stroke="#fedc8b" stroke-width="2.5"/>
+        <ellipse cx="160" cy="114" rx="77" ry="24" fill="url(#brothGrad)"/>
+        <path d="M96,115 Q125,98 155,115 Q185,128 215,112" stroke="#fedc8b" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M108,122 Q145,135 180,118 Q205,108 224,120" stroke="#f1c40f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        <g transform="translate(112, 102)">
+          <ellipse cx="18" cy="14" rx="16" ry="12" fill="#ffffff"/>
+          <ellipse cx="18" cy="14" rx="10" ry="8" fill="#f39c12"/>
+          <circle cx="15" cy="12" r="2.5" fill="#ffffff" opacity="0.8"/>
+        </g>
+        <g fill="#e67e22" stroke="#d35400" stroke-width="1">
+          <polygon points="170,105 182,99 188,108 178,114"/>
+          <polygon points="186,110 198,106 195,117 184,118"/>
+          <polygon points="145,116 156,110 162,120 150,123"/>
+          <circle cx="138" cy="126" r="6" fill="#8e44ad" stroke="#5b2c6f"/>
+          <circle cx="178" cy="124" r="5.5" fill="#a04000" stroke="#6e2c00"/>
+        </g>
+        <g fill="#27ae60">
+          <rect x="135" y="106" width="4" height="4" rx="1"/>
+          <rect x="162" y="122" width="4" height="4" rx="1"/>
+          <rect x="190" y="118" width="4" height="4" rx="1"/>
+          <rect x="148" y="125" width="4" height="4" rx="1"/>
+        </g>
+        <g stroke="#fedc8b" stroke-width="2.5" stroke-linecap="round" fill="none">
+          <path d="M142,148 Q148,143 154,148"/>
+          <path d="M166,148 Q172,143 178,148"/>
+        </g>
+        <ellipse cx="136" cy="152" rx="5" ry="3.5" fill="#ff758f" opacity="0.85"/>
+        <ellipse cx="184" cy="152" rx="5" ry="3.5" fill="#ff758f" opacity="0.85"/>
+        <path d="M157,153 Q160,158 163,153" stroke="#fedc8b" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        <g class="anim-chopsticks">
+          <line x1="165" y1="92" x2="230" y2="48" stroke="#d4a373" stroke-width="4.5" stroke-linecap="round"/>
+          <line x1="172" y1="96" x2="238" y2="54" stroke="#c58f5d" stroke-width="4" stroke-linecap="round"/>
+          <path d="M170,95 Q178,108 174,120" stroke="#f1c40f" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </g>
+        <path d="M68,75 C64,68 54,68 54,76 C54,84 68,93 68,93 C68,93 82,84 82,76 C82,68 72,68 68,75 Z" fill="#d93b68" opacity="0.75" transform="rotate(-15 68 75)"/>
+        <path d="M255,80 C252,74 244,74 244,80 C244,86 255,93 255,93 C255,93 266,86 266,80 C266,74 258,74 255,80 Z" fill="#ff758f" opacity="0.8" transform="rotate(12 255 80)"/>
+      </svg>`
+    },
+
+    "Cozy Coffee & Pastry Hangout": {
+      badge: "✦ BREWING SWEET MOMENTS ✦",
+      title: "Brewing Our Aesthetic Cafe Date! ☕",
+      subtitle: "Warm artisan coffee, strawberry croissants & candid smiles with you...",
+      status: "Pouring fresh coffee & printing VIP pass 🎟️",
+      svg: `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="cafeGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffd166" stop-opacity="0.45"/>
+            <stop offset="100%" stop-color="#ffd166" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="pinkCupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff758f"/>
+            <stop offset="100%" stop-color="#d93b68"/>
+          </linearGradient>
+          <linearGradient id="creamCupGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#faedd8"/>
+          </linearGradient>
+          <linearGradient id="croissantGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#f39c12"/>
+            <stop offset="100%" stop-color="#d35400"/>
+          </linearGradient>
+        </defs>
+        <ellipse cx="160" cy="130" rx="120" ry="45" fill="url(#cafeGlow)"/>
+        <ellipse cx="160" cy="168" rx="145" ry="24" fill="#faedd8" stroke="#ebd3b0" stroke-width="2"/>
+        <g transform="translate(195, 142)">
+          <ellipse cx="38" cy="18" rx="38" ry="12" fill="#ffffff" stroke="#ebd3b0" stroke-width="1.5"/>
+          <ellipse cx="38" cy="17" rx="32" ry="9" fill="#fffdf9"/>
+          <path d="M15,16 Q38,4 62,16 Q50,22 38,18 Q26,22 15,16 Z" fill="url(#croissantGrad)"/>
+          <path d="M26,14 Q38,9 50,14" stroke="#fedc8b" stroke-width="1.5" fill="none"/>
+          <path d="M38,7 C36,4 30,4 30,8 C30,12 38,16 38,16 C38,16 46,12 46,8 C46,4 40,4 38,7 Z" fill="#e6396b"/>
+          <polygon points="36,4 38,1 40,4 41,2 38,5" fill="#27ae60"/>
+        </g>
+        <g class="anim-cup-left">
+          <g class="anim-steam-1">
+            <path d="M122,68 Q118,50 126,38" stroke="#ff758f" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M126,36 C124,32 120,32 120,35 C120,38 126,42 126,42 C126,42 132,38 132,35 C132,32 128,32 126,36 Z" fill="#d93b68"/>
+          </g>
+          <ellipse cx="122" cy="156" rx="32" ry="8" fill="#ffccd5"/>
+          <path d="M96,112 Q80,124 96,138" stroke="#d93b68" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M96,104 L99,142 Q122,154 145,142 L148,104 Z" fill="url(#pinkCupGrad)"/>
+          <ellipse cx="122" cy="104" rx="26" ry="8" fill="#ffffff"/>
+          <ellipse cx="122" cy="105" rx="23" ry="6.5" fill="#6f4e37"/>
+          <path d="M122,103 C120,100 115,100 115,103 C115,107 122,110 122,110 C122,110 129,107 129,103 C129,100 124,100 122,103 Z" fill="#ffffff"/>
+          <circle cx="114" cy="124" r="2.5" fill="#ffffff"/>
+          <circle cx="130" cy="124" r="2.5" fill="#ffffff"/>
+          <ellipse cx="109" cy="128" rx="3" ry="2" fill="#ffd166" opacity="0.8"/>
+          <ellipse cx="135" cy="128" rx="3" ry="2" fill="#ffd166" opacity="0.8"/>
+          <path d="M120,128 Q122,132 124,128" stroke="#ffffff" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </g>
+        <g class="anim-cup-right">
+          <g class="anim-steam-2">
+            <path d="M178,65 Q184,48 176,34" stroke="#ffd166" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <path d="M176,32 C174,28 170,28 170,31 C170,34 176,38 176,38 C176,38 182,34 182,31 C182,28 178,28 176,32 Z" fill="#f39c12"/>
+          </g>
+          <ellipse cx="178" cy="156" rx="32" ry="8" fill="#ebd3b0"/>
+          <path d="M204,112 Q220,124 204,138" stroke="#c89e52" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M152,104 L155,142 Q178,154 201,142 L204,104 Z" fill="url(#creamCupGrad)" stroke="#ebd3b0" stroke-width="1"/>
+          <ellipse cx="178" cy="104" rx="26" ry="8" fill="#fdfaf5"/>
+          <ellipse cx="178" cy="105" rx="23" ry="6.5" fill="#583927"/>
+          <path d="M178,103 C176,100 171,100 171,103 C171,107 178,110 178,110 C178,110 185,107 185,103 C185,100 180,100 178,103 Z" fill="#faedd8"/>
+          <path d="M168,124 Q171,121 174,124" stroke="#4a2e1b" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="186" cy="124" r="2.5" fill="#4a2e1b"/>
+          <ellipse cx="166" cy="128" rx="3" ry="2" fill="#ff758f" opacity="0.8"/>
+          <ellipse cx="190" cy="128" rx="3" ry="2" fill="#ff758f" opacity="0.8"/>
+          <path d="M176,128 Q178,132 180,128" stroke="#4a2e1b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(150, 95)">
+          <g class="anim-cafe-sparkle">
+            <path d="M0,-8 L2,-2 L8,0 L2,2 L0,8 L-2,2 L-8,0 L-2,-2 Z" fill="#ffd166"/>
+          </g>
+        </g>
+        <g class="anim-music-note">
+          <text x="65" y="70" font-family="sans-serif" font-size="20" fill="#d93b68" font-weight="bold">♪</text>
+          <text x="245" y="60" font-family="sans-serif" font-size="22" fill="#c89e52" font-weight="bold">♫</text>
+        </g>
+      </svg>`
+    },
+
+    "Sunset Stroll & Late Night Drive": {
+      badge: "✦ GOLDEN HOUR CRUISE ✦",
+      title: "Cruising Into the Sunset with You! 🌅",
+      subtitle: "Windows down, our favorite songs playing & endless city lights ahead...",
+      status: "Mapping our scenic route & printing VIP pass 🎟️",
+      svg: `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#2d1424"/>
+            <stop offset="35%" stop-color="#6b1d3d"/>
+            <stop offset="70%" stop-color="#c43b4f"/>
+            <stop offset="90%" stop-color="#f39c12"/>
+            <stop offset="100%" stop-color="#fedc8b"/>
+          </linearGradient>
+          <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="30%" stop-color="#fedc8b"/>
+            <stop offset="65%" stop-color="#ff758f" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#ff758f" stop-opacity="0"/>
+          </radialGradient>
+          <linearGradient id="beamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#fedc8b" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#fedc8b" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Twilight Sunset Sky -->
+        <rect x="10" y="10" width="300" height="142" rx="14" fill="url(#skyGrad)"/>
+
+        <!-- Glowing Setting Sun on Horizon -->
+        <circle cx="160" cy="100" r="30" fill="url(#sunGlow)"/>
+
+        <!-- Distant Mountain Ridges & City Silhouette -->
+        <path d="M10,132 L42,116 L76,125 L112,112 L148,122 L178,114 L212,125 L248,112 L282,120 L310,114 L310,152 L10,152 Z" fill="#1c0a1a" opacity="0.9"/>
+
+        <!-- Twinkling Evening Stars -->
+        <circle cx="45" cy="32" r="1.5" fill="#ffffff" opacity="0.8"/>
+        <circle cx="92" cy="24" r="2" fill="#fedc8b"/>
+        <circle cx="230" cy="28" r="2" fill="#ffffff"/>
+        <circle cx="275" cy="40" r="1.8" fill="#fedc8b" opacity="0.85"/>
+
+        <!-- Smooth Asphalt Highway -->
+        <rect x="10" y="144" width="300" height="46" rx="4" fill="#1b101d"/>
+        <!-- Road Shoulder Line -->
+        <line x1="10" y1="145" x2="310" y2="145" stroke="#3d243f" stroke-width="2"/>
+        <!-- Animated Moving Highway Center Dashes -->
+        <line x1="15" y1="168" x2="305" y2="168" stroke="#fedc8b" stroke-width="3" stroke-dasharray="16 16" class="anim-road-lines"/>
+
+        <!-- ROADSTER POSITIONING GROUP (Fixed at road height) -->
+        <g transform="translate(92, 114)">
+          <!-- SUSPENSION BOUNCE GROUP (Pure micro-animation) -->
+          <g class="anim-car-body">
+            <!-- Glowing Golden Headlight Beam Cone -->
+            <polygon points="120,32 215,14 215,62 120,44" fill="url(#beamGrad)" opacity="0.65"/>
+
+            <!-- Cute Passenger Silhouettes / Chibis -->
+            <!-- Left Character (Mara): Cute dark burgundy hair & rosy blush -->
+            <circle cx="56" cy="12" r="8.5" fill="#791530"/>
+            <circle cx="57" cy="13" r="6.5" fill="#ffccd5"/>
+            <ellipse cx="60" cy="16" rx="2" ry="1.2" fill="#ff758f"/>
+            <!-- Right Character: Cute dark hair & golden blush -->
+            <circle cx="73" cy="10" r="9" fill="#2d1424"/>
+            <circle cx="72" cy="11" r="7" fill="#faedd8"/>
+            <ellipse cx="70" cy="14" rx="2" ry="1.2" fill="#ff758f"/>
+            <!-- Fluttering Love Heart between them -->
+            <path d="M65,2 C64,-1 60,-1 60,2 C60,5 65,8 65,8 C65,8 70,5 70,2 C70,-1 66,-1 65,2 Z" fill="#d93b68"/>
+
+            <!-- Curved Glass Windshield -->
+            <path d="M44,22 L58,3 Q84,3 96,22 Z" fill="#ffffff" opacity="0.5" stroke="#ffffff" stroke-width="1.2"/>
+
+            <!-- Car Body (Vintage Cherry-Rose Roadster) -->
+            <path d="M10,32 Q26,22 48,22 L98,22 Q120,24 124,36 L120,46 Q116,50 8,50 Q6,40 10,32 Z" fill="#d93b68"/>
+            <!-- Shiny Chrome Body Side Stripe -->
+            <path d="M10,34 L122,34" stroke="#fedc8b" stroke-width="2"/>
+            <!-- Front Headlight Bulb -->
+            <circle cx="122" cy="38" r="4.5" fill="#fedc8b"/>
+            <!-- Chrome Bumpers -->
+            <rect x="6" y="42" width="6" height="6" rx="2" fill="#fedc8b"/>
+            <rect x="118" y="42" width="6" height="6" rx="2" fill="#fedc8b"/>
+
+            <!-- REAR WHEEL (Positioning wrapper + rotating child) -->
+            <g transform="translate(28, 48)">
+              <g class="anim-car-wheel">
+                <circle cx="0" cy="0" r="11" fill="#141414"/>
+                <circle cx="0" cy="0" r="5.5" fill="#fedc8b"/>
+                <circle cx="0" cy="0" r="2" fill="#ffffff"/>
+              </g>
+            </g>
+
+            <!-- FRONT WHEEL (Positioning wrapper + rotating child) -->
+            <g transform="translate(98, 48)">
+              <g class="anim-car-wheel">
+                <circle cx="0" cy="0" r="11" fill="#141414"/>
+                <circle cx="0" cy="0" r="5.5" fill="#fedc8b"/>
+                <circle cx="0" cy="0" r="2" fill="#ffffff"/>
+              </g>
+            </g>
+
+            <!-- DRIFTING HEART EXHAUST (Positioning wrapper + drift animation child) -->
+            <g transform="translate(2, 42)">
+              <g class="anim-heart-exhaust">
+                <path d="M-4,0 C-6,-3 -11,-3 -11,0 C-11,3 -4,7 -4,7 C-4,7 3,3 3,0 C3,-3 -2,-3 -4,0 Z" fill="#ff758f"/>
+                <circle cx="-14" cy="4" r="2.8" fill="#ff9ebb" opacity="0.6"/>
+              </g>
+            </g>
+          </g>
+        </g>
+      </svg>`
+    },
+
+    "Movie Night & Blanket Fort": {
+      badge: "✦ COZY CINEMA PARADISE ✦",
+      title: "Building Our Cuddly Blanket Fort! 🎬",
+      subtitle: "Twinkling fairy lights, warm blankets, fresh popcorn & sweet cuddles...",
+      status: "Popping warm popcorn & printing VIP pass 🎟️",
+      svg: `<svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="fortGlow" cx="50%" cy="40%" r="60%">
+            <stop offset="0%" stop-color="#fff0f4"/>
+            <stop offset="60%" stop-color="#fae1e8"/>
+            <stop offset="100%" stop-color="#ecd1db"/>
+          </radialGradient>
+          <linearGradient id="projectorBeamGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#fedc8b" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#fedc8b" stop-opacity="0.1"/>
+          </linearGradient>
+          <linearGradient id="pillowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ff758f"/>
+            <stop offset="100%" stop-color="#d93b68"/>
+          </linearGradient>
+        </defs>
+        <rect x="15" y="15" width="290" height="170" rx="16" fill="url(#fortGlow)"/>
+        <path d="M15,15 Q80,75 160,35 Q240,75 305,15 L305,45 Q240,95 160,55 Q80,95 15,45 Z" fill="#d93b68" opacity="0.85"/>
+        <path d="M15,40 Q80,95 160,55 Q240,95 305,40 L305,65 Q240,115 160,75 Q80,115 15,65 Z" fill="#c42754" opacity="0.9"/>
+        <path d="M30,55 Q95,95 160,70 Q225,95 290,55" stroke="#fedc8b" stroke-width="1.8" fill="none"/>
+        <circle cx="50" cy="65" r="4.5" fill="#fedc8b" class="anim-fairy-light"/>
+        <circle cx="85" cy="80" r="4.5" fill="#ffd166" class="anim-fairy-light"/>
+        <circle cx="125" cy="80" r="4.5" fill="#ff9ebb" class="anim-fairy-light"/>
+        <circle cx="160" cy="70" r="5" fill="#ffffff" class="anim-fairy-light"/>
+        <circle cx="195" cy="80" r="4.5" fill="#fedc8b" class="anim-fairy-light"/>
+        <circle cx="235" cy="80" r="4.5" fill="#ffd166" class="anim-fairy-light"/>
+        <circle cx="270" cy="65" r="4.5" fill="#ff758f" class="anim-fairy-light"/>
+        <rect x="25" y="148" width="270" height="28" rx="8" fill="#ffffff" stroke="#ebd3b0" stroke-width="2"/>
+        <g transform="translate(55, 125)">
+          <rect x="0" y="0" width="38" height="28" rx="8" fill="url(#pillowGrad)" transform="rotate(-10)"/>
+          <circle cx="18" cy="12" r="3" fill="#ffffff" opacity="0.8"/>
+        </g>
+        <g transform="translate(88, 128)">
+          <rect x="0" y="0" width="42" height="28" rx="8" fill="#ffffff" stroke="#fedc8b" stroke-width="1.5" transform="rotate(8)"/>
+          <circle cx="20" cy="14" r="3" fill="#c89e52"/>
+        </g>
+        <g transform="translate(145, 124)">
+          <rect x="0" y="10" width="36" height="22" rx="4" fill="#2d1424"/>
+          <circle cx="9" cy="21" r="5" fill="#c89e52"/>
+          <circle cx="26" cy="21" r="4" fill="#c89e52"/>
+          <rect x="36" y="15" width="6" height="12" rx="2" fill="#fedc8b"/>
+          <polygon points="42,16 140,-5 140,42 42,26" fill="url(#projectorBeamGrad)" class="anim-projector-beam"/>
+          <g class="anim-projector-beam" transform="translate(110, 8)">
+            <path d="M12,4 C10,1 6,1 6,4 C6,7 12,11 12,11 C12,11 18,7 18,4 C18,1 14,1 12,4 Z" fill="#d93b68"/>
+          </g>
+          <circle cx="8" cy="7" r="7" fill="#791530" stroke="#fedc8b" stroke-width="1.5"/>
+          <circle cx="26" cy="7" r="7" fill="#791530" stroke="#fedc8b" stroke-width="1.5"/>
+        </g>
+        <g transform="translate(230, 115)">
+          <path d="M4,20 L8,55 Q20,58 32,55 L36,20 Z" fill="#ffffff"/>
+          <path d="M10,20 L13,56 L19,56 L16,20 Z" fill="#e6396b"/>
+          <path d="M24,20 L27,56 L33,55 L30,20 Z" fill="#e6396b"/>
+          <circle cx="16" cy="38" r="1.8" fill="#2d1424"/>
+          <circle cx="24" cy="38" r="1.8" fill="#2d1424"/>
+          <ellipse cx="13" cy="41" rx="2" ry="1.2" fill="#ff758f"/>
+          <ellipse cx="27" cy="41" rx="2" ry="1.2" fill="#ff758f"/>
+          <path d="M19,41 Q20,44 21,41" stroke="#2d1424" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+          <circle cx="8" cy="18" r="6" fill="#fedc8b"/>
+          <circle cx="16" cy="14" r="7" fill="#ffffff"/>
+          <circle cx="24" cy="14" r="7" fill="#fedc8b"/>
+          <circle cx="32" cy="18" r="6" fill="#ffffff"/>
+          <circle cx="20" cy="18" r="6.5" fill="#fffdf9"/>
+          <g class="anim-popcorn-heart">
+            <path d="M18,2 C16,-1 12,-1 12,2 C12,5 18,9 18,9 C18,9 24,5 24,2 C24,-1 20,-1 18,2 Z" fill="#ffd166"/>
+            <circle cx="28" cy="4" r="3" fill="#ffffff"/>
+          </g>
+        </g>
+      </svg>`
+    }
+  };
+
+  // ==========================================================================
+  // STAGE TRANSITION: LOCK IN DATE -> CARTOON ANIMATION -> TICKET PASS
+  // ==========================================================================
   if (btnLockDate) {
     btnLockDate.addEventListener('click', () => {
       soundEngine.playOpenChime();
-      spawnConfetti(90);
 
       currentCustomNote = customNoteInput ? customNoteInput.value.trim() : "";
 
@@ -611,12 +968,61 @@ document.addEventListener('DOMContentLoaded', () => {
         ticketNoteDisplay.textContent = currentCustomNote ? `"${currentCustomNote}"` : `"Extra cute smiles & good vibes"`;
       }
 
-      document.querySelector('.planner-form').style.display = 'none';
-      ticketResult.classList.remove('hidden');
+      // Look up chosen cartoon scene data
+      const sceneData = VIBE_SCENES[selectedVibe] || VIBE_SCENES["Special Batangas Lomi Date"];
 
-      setTimeout(() => {
-        ticketResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 200);
+      // Populate cartoon scene DOM
+      if (cartoonBadge) cartoonBadge.textContent = sceneData.badge;
+      if (cartoonTitle) cartoonTitle.textContent = sceneData.title;
+      if (cartoonSubtitle) cartoonSubtitle.textContent = sceneData.subtitle;
+      if (cartoonLoaderStatus) cartoonLoaderStatus.textContent = sceneData.status;
+      if (cartoonScene) cartoonScene.innerHTML = sceneData.svg;
+
+      // Update header banner during transition
+      const celebrationBadge = document.querySelector('.celebration-badge');
+      const celebrationTitle = document.querySelector('.celebration-title');
+      const celebrationSub = document.querySelector('.celebration-sub');
+
+      if (celebrationBadge) celebrationBadge.textContent = sceneData.badge;
+      if (celebrationTitle) celebrationTitle.textContent = "Locking In Our Date! ✨";
+      if (celebrationSub) celebrationSub.textContent = "Hold on tight, crafting our official boarding pass below:";
+
+      // Hide planner, show cartoon animation stage
+      document.querySelector('.planner-form').style.display = 'none';
+      if (ticketResult) ticketResult.classList.add('hidden');
+      if (vibeAnimationStage) {
+        vibeAnimationStage.classList.remove('hidden');
+
+        // Reset progress bar animation
+        if (cartoonLoaderBar) {
+          cartoonLoaderBar.style.animation = 'none';
+          void cartoonLoaderBar.offsetWidth;
+          cartoonLoaderBar.style.animation = '';
+        }
+
+        vibeAnimationStage.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      // Clear any prior transition timers
+      if (cartoonTransitionTimer) clearTimeout(cartoonTransitionTimer);
+
+      // Play interstitial animation for 2.8s, then smoothly reveal the VIP Ticket!
+      cartoonTransitionTimer = setTimeout(() => {
+        if (vibeAnimationStage) vibeAnimationStage.classList.add('hidden');
+        if (ticketResult) ticketResult.classList.remove('hidden');
+
+        // Update celebration banner for final ticket pass
+        if (celebrationBadge) celebrationBadge.textContent = "✦ DATE PASS CONFIRMED ✦";
+        if (celebrationTitle) celebrationTitle.textContent = "It's an Official Date! 💖";
+        if (celebrationSub) celebrationSub.textContent = "Here is our official VIP date pass. Save this keepsake below:";
+
+        soundEngine.playCelebrationFanfare();
+        spawnConfetti(110);
+
+        setTimeout(() => {
+          ticketResult.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 150);
+      }, 2800);
     });
   }
 
@@ -625,217 +1031,263 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnResetChoices) {
     btnResetChoices.addEventListener('click', () => {
       soundEngine.playClick();
-      ticketResult.classList.add('hidden');
+      if (cartoonTransitionTimer) clearTimeout(cartoonTransitionTimer);
+
+      if (vibeAnimationStage) vibeAnimationStage.classList.add('hidden');
+      if (ticketResult) ticketResult.classList.add('hidden');
       document.querySelector('.planner-form').style.display = 'flex';
+
+      // Restore planner celebration banner
+      const celebrationBadge = document.querySelector('.celebration-badge');
+      const celebrationTitle = document.querySelector('.celebration-title');
+      const celebrationSub = document.querySelector('.celebration-sub');
+
+      if (celebrationBadge) celebrationBadge.textContent = "✦ SHE/HE SAID YES! ✦";
+      if (celebrationTitle) celebrationTitle.textContent = "You just made my whole year! 🥰";
+      if (celebrationSub) celebrationSub.textContent = "Now let's plan the most perfect date together. Customize our agenda below:";
+
       window.scrollTo({ top: 180, behavior: 'smooth' });
     });
   }
 
   // ==========================================================================
-  // 8. LUXURY BOARDING PASS TICKET DOWNLOAD (HIGH-RESOLUTION CANVAS PNG)
+  // 8. OFFICIAL VIP DATE PASS DOWNLOAD (JUST THE TICKET - HIGH-RES PNG)
   // ==========================================================================
-  function downloadTicketImage() {
+  function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+    const words = text.split(' ');
+    let line = '';
+    let curY = y;
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        ctx.fillText(line.trim(), x, curY);
+        line = words[n] + ' ';
+        curY += lineHeight;
+      } else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line.trim(), x, curY);
+    return curY + lineHeight;
+  }
+
+  async function downloadTicketImage() {
     soundEngine.playCelebrationFanfare();
     spawnConfetti(100);
 
     const downloadText = document.getElementById('download-text');
-    if (downloadText) downloadText.textContent = "Creating Image...";
+    if (downloadText) downloadText.textContent = "Creating Pass...";
+
+    // Ensure custom web fonts are rendered properly in canvas
+    if (document.fonts && document.fonts.ready) {
+      await document.fonts.ready;
+    }
 
     // Render at 2x Retina resolution for crisp typography and graphics
     const dpr = 2;
-    const canvasWidth = 760;
-    const canvasHeight = 460;
+    const cardW = 480;
+    const cardH = 580;
+    const radius = 18;
+    const notchR = 14;
+    const perfY = 430;
 
     const offCanvas = document.createElement('canvas');
-    offCanvas.width = canvasWidth * dpr;
-    offCanvas.height = canvasHeight * dpr;
+    offCanvas.width = cardW * dpr;
+    offCanvas.height = cardH * dpr;
     const c = offCanvas.getContext('2d');
     c.scale(dpr, dpr);
 
-    // Outer background fill
-    c.fillStyle = '#fff6f8';
-    c.fillRect(0, 0, canvasWidth, canvasHeight);
+    // Canvas starts fully transparent - only the ticket card is drawn
+    c.clearRect(0, 0, cardW, cardH);
 
-    // 1. Ticket Base Card
-    const cardX = 24;
-    const cardY = 24;
-    const cardW = canvasWidth - 48;
-    const cardH = canvasHeight - 48;
-    const radius = 18;
-
+    // 1. Draw Ticket Card Shape (Rounded corners + genuine circular perforation cutouts)
     c.save();
     c.beginPath();
-    c.roundRect(cardX, cardY, cardW, cardH, radius);
+    c.moveTo(radius, 0);
+    // Top edge
+    c.lineTo(cardW - radius, 0);
+    // Top-right corner
+    c.arcTo(cardW, 0, cardW, radius, radius);
+    // Right edge down to above notch
+    c.lineTo(cardW, perfY - notchR);
+    // Right notch cutout (curving inward into card)
+    c.arc(cardW, perfY, notchR, -Math.PI / 2, Math.PI / 2, true);
+    // Right edge down to bottom-right
+    c.lineTo(cardW, cardH - radius);
+    // Bottom-right corner
+    c.arcTo(cardW, cardH, cardW - radius, cardH, radius);
+    // Bottom edge to bottom-left
+    c.lineTo(radius, cardH);
+    // Bottom-left corner
+    c.arcTo(0, cardH, 0, cardH - radius, radius);
+    // Left edge up to below notch
+    c.lineTo(0, perfY + notchR);
+    // Left notch cutout (curving inward into card)
+    c.arc(0, perfY, notchR, Math.PI / 2, -Math.PI / 2, true);
+    // Left edge up to top-left corner
+    c.lineTo(0, radius);
+    // Top-left corner
+    c.arcTo(0, 0, radius, 0, radius);
+    c.closePath();
+
+    // Fill ticket body with clean white
     c.fillStyle = '#ffffff';
     c.fill();
-    c.lineWidth = 2;
-    c.strokeStyle = '#ebd3b0';
-    c.stroke();
 
-    // Inner gold luxury border
-    c.beginPath();
-    c.roundRect(cardX + 8, cardY + 8, cardW - 16, cardH - 16, radius - 6);
-    c.lineWidth = 1;
-    c.strokeStyle = 'rgba(200, 158, 82, 0.35)';
+    // Outline stroke
+    c.strokeStyle = '#ebd3b0';
+    c.lineWidth = 2;
     c.stroke();
     c.restore();
 
-    // 2. Ticket Header
+    // 2. Inner luxury gold accent frame
+    c.save();
+    c.strokeStyle = 'rgba(200, 158, 82, 0.35)';
+    c.lineWidth = 1;
+    c.beginPath();
+    c.roundRect(7, 7, cardW - 14, cardH - 14, radius - 4);
+    c.stroke();
+    c.restore();
+
+    // 3. Ticket Header: Brand Logo & Confirmed Badge
+    const padX = 30;
     c.fillStyle = '#791530';
-    c.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
-    c.fillText('❦  OFFICIAL DATE PASS', cardX + 28, cardY + 44);
+    c.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    c.textAlign = 'left';
+    c.fillText('❦  OFFICIAL DATE PASS', padX, 42);
 
     // Status Badge: CONFIRMED ✓
     const badgeText = 'CONFIRMED ✓';
-    c.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
-    const badgeW = c.measureText(badgeText).width + 20;
-    const badgeX = cardX + cardW - badgeW - 28;
-    const badgeY = cardY + 28;
+    c.font = 'bold 11px "Plus Jakarta Sans", sans-serif';
+    const badgeW = c.measureText(badgeText).width + 18;
+    const badgeX = cardW - padX - badgeW;
+    const badgeY = 26;
     c.beginPath();
-    c.roundRect(badgeX, badgeY, badgeW, 24, 6);
+    c.roundRect(badgeX, badgeY, badgeW, 22, 6);
     c.fillStyle = '#e8f7ec';
     c.fill();
     c.strokeStyle = '#1b7a37';
     c.lineWidth = 1;
     c.stroke();
     c.fillStyle = '#1b7a37';
-    c.fillText(badgeText, badgeX + 10, badgeY + 16);
+    c.fillText(badgeText, badgeX + 9, badgeY + 15);
 
     // Header divider line
     c.beginPath();
-    c.moveTo(cardX + 26, cardY + 64);
-    c.lineTo(cardX + cardW - 26, cardY + 64);
+    c.moveTo(padX, 64);
+    c.lineTo(cardW - padX, 64);
     c.strokeStyle = '#ebd8bd';
     c.lineWidth = 1.2;
     c.stroke();
 
-    // 3. Ticket Main Content Grid
-    const col1X = cardX + 30;
-    const col2X = cardX + cardW / 2 + 10;
+    // 4. Ticket Content (2 Columns)
+    const col1X = padX;
+    const col2X = cardW / 2 + 10;
+    const colWidth = cardW / 2 - padX - 10;
 
-    // Row 1: Passenger / VIP
+    // Row 1: Passenger / VIP & Destination
     c.fillStyle = '#8f7685';
     c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
-    c.fillText('PASSENGER / VIP', col1X, cardY + 92);
+    c.fillText('PASSENGER / VIP', col1X, 94);
     c.fillStyle = '#d93b68';
-    c.font = 'bold 19px "Plus Jakarta Sans", sans-serif';
-    c.fillText(INVITATION_CONFIG.petName, col1X, cardY + 118);
+    c.font = 'bold 18px "Plus Jakarta Sans", sans-serif';
+    c.fillText(INVITATION_CONFIG.petName, col1X, 118);
 
-    // Row 1: Destination
     c.fillStyle = '#8f7685';
     c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
-    c.fillText('DESTINATION', col2X, cardY + 92);
+    c.fillText('DESTINATION', col2X, 94);
     c.fillStyle = '#2b1129';
-    c.font = 'bold 17px "Plus Jakarta Sans", sans-serif';
-    c.fillText('To My Heart & A Great Time', col2X, cardY + 118);
+    c.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    wrapCanvasText(c, 'To My Heart & A Great Time', col2X, 118, colWidth, 20);
 
-    // Row 2: Planned Vibe
+    // Row 2: Planned Vibe & Schedule
     c.fillStyle = '#8f7685';
     c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
-    c.fillText('PLANNED VIBE', col1X, cardY + 155);
+    c.fillText('PLANNED VIBE', col1X, 185);
     c.fillStyle = '#2b1129';
-    c.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
-    c.fillText(selectedVibe, col1X, cardY + 180);
+    c.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    wrapCanvasText(c, selectedVibe, col1X, 208, colWidth, 21);
 
-    // Row 2: Schedule
     c.fillStyle = '#8f7685';
     c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
-    c.fillText('SCHEDULE', col2X, cardY + 155);
+    c.fillText('SCHEDULE', col2X, 185);
     c.fillStyle = '#2b1129';
-    c.font = 'bold 16px "Plus Jakarta Sans", sans-serif';
-    c.fillText(selectedSchedule, col2X, cardY + 180);
+    c.font = 'bold 15px "Plus Jakarta Sans", sans-serif';
+    wrapCanvasText(c, selectedSchedule, col2X, 208, colWidth, 21);
 
-    // Row 3: Special Request
+    // Row 3: Special Request (Full Width)
     c.fillStyle = '#8f7685';
     c.font = 'bold 10px "Plus Jakarta Sans", sans-serif';
-    c.fillText('SPECIAL REQUEST', col1X, cardY + 215);
+    c.fillText('SPECIAL REQUEST', col1X, 280);
     c.fillStyle = '#553c52';
-    c.font = 'italic 500 15px "Plus Jakarta Sans", sans-serif';
+    c.font = 'italic 500 14px "Plus Jakarta Sans", sans-serif';
     const noteText = currentCustomNote ? `"${currentCustomNote}"` : `"Extra cute smiles & good vibes"`;
-    c.fillText(noteText, col1X, cardY + 238);
+    wrapCanvasText(c, noteText, col1X, 304, cardW - padX * 2, 21);
 
-    // 4. Perforation Line with Side Notches
-    const perfY = cardY + 270;
-
-    // Left notch cutout
-    c.beginPath();
-    c.arc(cardX, perfY, 13, -Math.PI / 2, Math.PI / 2, false);
-    c.fillStyle = '#fff6f8';
-    c.fill();
-    c.strokeStyle = '#ebd3b0';
-    c.lineWidth = 2;
-    c.stroke();
-
-    // Right notch cutout
-    c.beginPath();
-    c.arc(cardX + cardW, perfY, 13, Math.PI / 2, -Math.PI / 2, false);
-    c.fillStyle = '#fff6f8';
-    c.fill();
-    c.strokeStyle = '#ebd3b0';
-    c.lineWidth = 2;
-    c.stroke();
-
-    // Dashed perforation line
+    // 5. Perforation Dashed Line across notches
     c.beginPath();
     c.setLineDash([8, 6]);
-    c.moveTo(cardX + 22, perfY);
-    c.lineTo(cardX + cardW - 22, perfY);
+    c.moveTo(notchR + 8, perfY);
+    c.lineTo(cardW - notchR - 8, perfY);
     c.strokeStyle = '#dac2a1';
     c.lineWidth = 1.8;
     c.stroke();
     c.setLineDash([]); // Reset dash
 
-    // 5. Footer: Barcode & Approved Stamp
-    const barX = cardX + 30;
-    const barY = perfY + 26;
-    const barWidths = [3, 1, 4, 2, 1, 3, 2, 5, 2, 1, 3, 4, 1, 2, 3, 1, 5, 2, 2, 4, 1, 3, 2, 4, 2, 1, 3, 2, 4, 1, 2, 4];
+    // 6. Footer: Barcode & Approved Stamp
+    const barX = padX;
+    const barY = perfY + 28;
+    const barWidths = [3, 1, 4, 2, 1, 3, 2, 5, 2, 1, 3, 4, 1, 2, 3, 1, 5, 2, 2, 4, 1, 3, 2, 4];
     let curX = barX;
     c.fillStyle = '#1d0d1e';
     for (let i = 0; i < barWidths.length; i++) {
-      const w = barWidths[i] * 2.1;
+      const w = barWidths[i] * 1.7;
       if (i % 2 === 0) {
-        c.fillRect(curX, barY, w, 36);
+        c.fillRect(curX, barY, w, 34);
       }
-      curX += w + 2.4;
+      curX += w + 2.2;
     }
 
     c.fillStyle = '#7d6b79';
     c.font = '10px monospace';
-    c.fillText('DATE-NO-REFUNDS-FOREVER-💖', barX, barY + 52);
+    c.fillText('DATE-NO-REFUNDS-FOREVER-💖', barX, barY + 48);
 
-    // Official Approved Stamp (tilted)
+    // Official Approved Stamp (tilted -8deg)
     c.save();
-    c.translate(cardX + cardW - 135, barY + 25);
+    c.translate(cardW - padX - 85, barY + 20);
     c.rotate((-8 * Math.PI) / 180);
     c.beginPath();
-    c.roundRect(-80, -22, 160, 44, 6);
+    c.roundRect(-75, -20, 150, 40, 5);
     c.strokeStyle = '#a61f3d';
-    c.lineWidth = 2.5;
+    c.lineWidth = 2.2;
     c.stroke();
+    c.fillStyle = 'rgba(166, 31, 61, 0.04)';
+    c.fill();
     c.fillStyle = '#a61f3d';
-    c.font = 'bold 13px "Plus Jakarta Sans", sans-serif';
+    c.font = 'bold 12px "Plus Jakarta Sans", sans-serif';
     c.textAlign = 'center';
     c.fillText('APPROVED WITH LOVE', 0, 5);
     c.restore();
 
-    // 6. Download as PNG
+    // 7. Download High-Resolution PNG of just the ticket
     try {
       const imageURL = offCanvas.toDataURL('image/png');
       const link = document.createElement('a');
-      link.download = `Date-Ticket-${INVITATION_CONFIG.recipientName.replace(/\s+/g, '-')}.png`;
+      link.download = `Date-Pass-${INVITATION_CONFIG.recipientName.replace(/\s+/g, '-')}.png`;
       link.href = imageURL;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      if (downloadText) downloadText.textContent = "✓ Downloaded!";
+      if (downloadText) downloadText.textContent = "✓ Date Pass Saved!";
     } catch (err) {
       console.error("Ticket download error:", err);
-      if (downloadText) downloadText.textContent = "Download Ticket 🎟️";
+      if (downloadText) downloadText.textContent = "Download Date Pass";
     }
 
     setTimeout(() => {
-      if (downloadText) downloadText.textContent = "Download Ticket 🎟️";
+      if (downloadText) downloadText.textContent = "Download Date Pass";
     }, 3500);
   }
 
@@ -844,67 +1296,5 @@ document.addEventListener('DOMContentLoaded', () => {
     btnDownloadTicket.addEventListener('click', downloadTicketImage);
   }
 
-  // ==========================================================================
-  // 9. SHARING & RSVP GENERATOR (WHATSAPP & CLIPBOARD)
-  // ==========================================================================
-  function generateRSVPMessage() {
-    let msg = `💖 Official Date Confirmation for ${INVITATION_CONFIG.recipientName}! 💖\n\n`;
-    msg += `I said YES! Here is our date plan:\n`;
-    msg += `✨ VIP Passenger: ${INVITATION_CONFIG.petName}\n`;
-    msg += `🍜 Planned Vibe: ${selectedVibe}\n`;
-    msg += `🗓️ Schedule: ${selectedSchedule}\n`;
-    if (currentCustomNote) {
-      msg += `💭 Special Request: "${currentCustomNote}"\n`;
-    }
-    msg += `\nI can't wait! See you on our date! 🥰✨`;
-    return msg;
-  }
-
-  // WhatsApp Share
-  const btnShareWhatsApp = document.getElementById('btn-share-whatsapp');
-  if (btnShareWhatsApp) {
-    btnShareWhatsApp.addEventListener('click', () => {
-      soundEngine.playClick();
-      const message = generateRSVPMessage();
-      const url = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-      window.open(url, '_blank');
-    });
-  }
-
-  // Copy to Clipboard
-  const btnCopyRsvp = document.getElementById('btn-copy-rsvp');
-  const copyToast = document.getElementById('rsvp-copy-toast');
-  const copyText = document.getElementById('copy-text');
-
-  if (btnCopyRsvp) {
-    btnCopyRsvp.addEventListener('click', async () => {
-      soundEngine.playClick();
-      const message = generateRSVPMessage();
-
-      try {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          await navigator.clipboard.writeText(message);
-        } else {
-          const ta = document.createElement('textarea');
-          ta.value = message;
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand('copy');
-          document.body.removeChild(ta);
-        }
-
-        if (copyToast) {
-          copyToast.classList.add('show');
-          copyText.textContent = "✓ Copied Sweet Message!";
-          setTimeout(() => {
-            copyToast.classList.remove('show');
-            copyText.textContent = "📋 Copy Sweet RSVP";
-          }, 3500);
-        }
-      } catch (err) {
-        console.error('Clipboard copy failed', err);
-      }
-    });
-  }
-
 });
+
